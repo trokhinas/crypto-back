@@ -1,21 +1,16 @@
 package vsu.labs.crypto.dto.response;
 
+import lombok.AllArgsConstructor;
 import vsu.labs.crypto.enums.ResponseStatus;
 
 import static vsu.labs.crypto.enums.ResponseStatus.*;
 
-
+@AllArgsConstructor
 public class Response {
 
-    private Object data;
-    private ResponseStatus status;
-    private String message;
-
-    private Response(Object data, ResponseStatus status, String message) {
-        this.data = data;
-        this.status = status;
-        this.message = message;
-    }
+    private final Object data;
+    private final ResponseStatus status;
+    private final String message;
 
     public static Response success(Object data, String message) {
         return new Response(data, OK, message);
@@ -23,6 +18,10 @@ public class Response {
 
     public static Response success(String message) {
         return new Response(null, OK, message);
+    }
+
+    public static Response success() {
+        return new Response(null, OK, null);
     }
 
     public static Response fail(String message) {

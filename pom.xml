@@ -35,6 +35,12 @@
             <version>42.2.5</version>
         </dependency>
 
+        <!--liquibase-->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
         <!--spring-boot-->
 
         <dependency>

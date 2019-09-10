@@ -21,4 +21,14 @@ public class TestRestController {
         log.info("call check for test {}", test);
         return Response.success();
     }
+
+    @GetMapping("hello")
+    public String hello() {
+        return "hello";
+    }
+
+    @GetMapping("helloResponse")
+    public Response helloResponse() {
+        return Response.success("hello");
+    }
 }

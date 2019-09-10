@@ -53,7 +53,7 @@ create table if not exists answer
 	question_id integer
 		constraint answer_question_id_fk
 			references question,
-	vname varchar(100),
+	name varchar(100),
 	is_correct boolean
 )
 ;

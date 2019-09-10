@@ -1,11 +1,12 @@
 package vsu.labs.crypto.dto.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import vsu.labs.crypto.enums.ResponseStatus;
 
 import static vsu.labs.crypto.enums.ResponseStatus.*;
 
-@AllArgsConstructor
+@Data @AllArgsConstructor
 public class Response {
 
     private final Object data;

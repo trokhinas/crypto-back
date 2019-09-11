@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vsu.labs.crypto.dto.crypto.PartitionAlgData;
 import vsu.labs.crypto.dto.crypto.StageData;
+import vsu.labs.crypto.utils.ListIncrementDataBuilder;
+import vsu.labs.crypto.utils.MessageUtils;
 import vsu.labs.crypto.utils.StringSplitter;
 
 import java.util.List;
@@ -18,8 +20,6 @@ public final class Rot13 {
 
     private static final int PARTITION_SIZE = 4;
     private static final StringSplitter splitter = StringSplitter.withPartitionSize(PARTITION_SIZE);
-
-    private static final String STAGE_MESSAGE = "Зашифровано %d процентов сообщения";
 
     private Rot13() { }
 
@@ -36,25 +36,17 @@ public final class Rot13 {
 
     public static PartitionAlgData stagingEncrypt(String source) {
         log.info("start method stagingEncrypt with partition");
-        List<String> parts = splitter.splitIntoParts(source);
+        String encryptedSource = encrypt(source);
 
-        List<String> encryptedParts = parts.stream()
-                .map(Rot13::encrypt)
+        List<String> encryptedParts = splitter.splitIntoParts(encryptedSource);
+        encryptedParts = ListIncrementDataBuilder.buildIncrementalList(encryptedParts);
+        List<StageData> data = encryptedParts.stream()
+                .map(part -> {
+                    String message = MessageUtils.generatePercentEncryptMessage(source, part);
+                    return StageData.withData(message, part);
+                })
                 .collect(Collectors.toList());
-        for (int i = 1; i < encryptedParts.size(); i++) {
-            String concatPart = encryptedParts.get(i - 1).concat(encryptedParts.get(i));
-            encryptedParts.set(i, concatPart);
-        }
-        List<StageData> data = encryptedParts.stream().map(part -> {
-            String message = generateMessage(source, part);
-            return StageData.withData(message, part);
-        }).collect(Collectors.toList());
-        return new PartitionAlgData(data, data.get(data.size() - 1));
-    }
-
-    private static String generateMessage(String source, String part) {
-        int percent = (int) (((float)part.length() / source.length()) * 100);
-        return String.format(STAGE_MESSAGE, percent);
+        return new PartitionAlgData(data, encryptedSource);
     }
 
     // так как шифрованием происходит сдвигом на 13 букв,

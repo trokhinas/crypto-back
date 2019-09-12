@@ -1,67 +1,31 @@
 package vsu.labs.crypto.entity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 public class Task {
-    private int id;
-    private String type;
-    private String name;
-    private Test testByTestId;
 
     @Id
     @Column(name = "id")
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    private int id;
 
     @Basic
     @Column(name = "type")
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+    private String type;
 
     @Basic
     @Column(name = "name")
-    public String getName() {
-        return name;
-    }
+    private String name;
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
-        return id == task.id &&
-                Objects.equals(type, task.type) &&
-                Objects.equals(name, task.name);
-    }
+    @OneToMany(mappedBy = "task")
+    private List<Question> questionList;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, type, name);
-    }
 
-    @ManyToOne
-    @JoinColumn(name = "test_id", referencedColumnName = "id")
-    public Test getTestByTestId() {
-        return testByTestId;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "test_id")
+    private Test test;
 
-    public void setTestByTestId(Test testByTestId) {
-        this.testByTestId = testByTestId;
-    }
 }

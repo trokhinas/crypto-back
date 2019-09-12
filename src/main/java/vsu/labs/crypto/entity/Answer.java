@@ -2,10 +2,7 @@ package vsu.labs.crypto.entity;
 
 import lombok.Data;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -21,4 +18,8 @@ public class Answer {
     @Basic
     @Column(name = "is_correct")
     private Boolean isCorrect;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
+    private Question question;
 }

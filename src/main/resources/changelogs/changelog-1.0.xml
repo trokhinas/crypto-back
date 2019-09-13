@@ -6,5 +6,6 @@
 
 
     <include file="classpath:changelogs/create_test_schema.sql"/>
+    <include file="classpath:changelogs/update_test_1.0.sql"/>
 
 </databaseChangeLog>

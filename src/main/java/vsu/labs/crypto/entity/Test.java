@@ -1,10 +1,13 @@
 package vsu.labs.crypto.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
-import java.util.List;
-import java.util.Objects;
+
+
 
 @Entity
+@Data
 public class Test {
 
     @Id
@@ -13,9 +16,6 @@ public class Test {
 
     @Column(name = "title")
     private String title;
-
-    @OneToMany(mappedBy = "test")
-    private List<Test> test;
 
 }
 

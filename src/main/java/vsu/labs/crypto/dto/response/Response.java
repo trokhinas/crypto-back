@@ -17,8 +17,8 @@ public class Response {
         return new Response(data, OK, message);
     }
 
-    public static Response success(String message) {
-        return new Response(null, OK, message);
+    public static Response success(Object data) {
+        return new Response(data, OK, null);
     }
 
     public static Response success() {

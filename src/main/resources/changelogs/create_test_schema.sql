@@ -1,6 +1,6 @@
 create table if not exists test
 (
-  id integer not null
+  id bigserial not null
     constraint task_pkey
     primary key,
   title varchar(50)
@@ -10,7 +10,7 @@ create table if not exists test
 
 create table if not exists task
 (
-  id integer not null
+  id bigserial not null
     constraint task_pkey1
     primary key,
   type varchar(100),
@@ -24,7 +24,7 @@ create table if not exists task
 
 create table if not exists question
 (
-  id integer not null
+  id bigserial not null
     constraint question_pk
     primary key,
   name varchar(100),
@@ -36,7 +36,7 @@ create table if not exists question
 
 create table if not exists answer
 (
-  id integer not null
+  id bigserial not null
     constraint answer_pk
     primary key,
   question_id integer

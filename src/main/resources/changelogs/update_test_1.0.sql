@@ -1,6 +1,6 @@
 create table role
 (
-	id integer not null
+	id bigserial not null
 		constraint role_pkey
 			primary key,
 	name varchar(100)
@@ -9,7 +9,7 @@ create table role
 
 create table "user"
 (
-	id integer not null
+	id bigserial not null
 		constraint user_pkey
 			primary key,
 	name varchar(100),

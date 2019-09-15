@@ -1,7 +1,5 @@
 package vsu.labs.crypto.enums;
 
-import vsu.labs.crypto.entity.IEnum;
-
 import java.util.Arrays;
 
 public enum RoleType implements IEnum {

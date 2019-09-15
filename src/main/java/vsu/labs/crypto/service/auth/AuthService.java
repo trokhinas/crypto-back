@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import vsu.labs.crypto.dto.auth.AuthResponse;
 import vsu.labs.crypto.dto.auth.LoginRequest;
 import vsu.labs.crypto.entity.JpaRepository.UserRepository;
-import vsu.labs.crypto.entity.UserEntity;
+import vsu.labs.crypto.entity.security.UserEntity;
 import vsu.labs.crypto.enums.RoleType;
 import vsu.labs.crypto.exceptions.LogicException;
 

@@ -1,4 +1,4 @@
-package vsu.labs.crypto.entity;
+package vsu.labs.crypto.entity.test;
 
 import lombok.Data;
 

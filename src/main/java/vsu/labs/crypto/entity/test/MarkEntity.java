@@ -1,4 +1,4 @@
-package vsu.labs.crypto.entity;
+package vsu.labs.crypto.entity.test;
 
 import lombok.Data;
 
@@ -8,11 +8,12 @@ import javax.persistence.Id;
 
 @Entity
 @Data
+// TODO добавить связи
 public class MarkEntity {
     @Id
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @Column(name = "mark")
-    private int mark;
+    private Integer mark;
 }

@@ -1,4 +1,4 @@
-package vsu.labs.crypto.entity;
+package vsu.labs.crypto.entity.test;
 
 import lombok.Data;
 
@@ -9,10 +9,10 @@ import java.util.List;
 @Entity
 @Data
 public class QuestionEntity {
-
     @Id
     @Column(name = "id")
-    private int id;
+    private Long id;
+
     @Basic
     @Column(name = "name")
     private String name;

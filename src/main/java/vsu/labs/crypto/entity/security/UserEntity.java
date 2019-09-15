@@ -1,4 +1,4 @@
-package vsu.labs.crypto.entity;
+package vsu.labs.crypto.entity.security;
 
 import lombok.Data;
 
@@ -10,7 +10,6 @@ import javax.persistence.Id;
 @Data
 // TODO добавить поле roleId в UserEntity
 public class UserEntity {
-
     @Id
     @Column(name = "id")
     private Long id;
@@ -21,13 +20,9 @@ public class UserEntity {
     @Column(name = "surname")
     private String surname;
 
-
     @Column(name = "login")
     private String login;
 
-
     @Column(name = "password")
     private String password;
-
-
 }

@@ -3,23 +3,22 @@ package vsu.labs.crypto.service.test;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vsu.labs.crypto.dto.test.Answer;
 import vsu.labs.crypto.dto.test.Question;
 import vsu.labs.crypto.dto.test.Task;
 import vsu.labs.crypto.dto.test.Test;
-import vsu.labs.crypto.entity.AnswerEntity;
 import vsu.labs.crypto.entity.JpaRepository.AnswerRepository;
 import vsu.labs.crypto.entity.JpaRepository.QuestionRepository;
 import vsu.labs.crypto.entity.JpaRepository.TaskRepository;
 import vsu.labs.crypto.entity.JpaRepository.TestRepository;
-import vsu.labs.crypto.entity.QuestionEntity;
-import vsu.labs.crypto.entity.TaskEntity;
-import vsu.labs.crypto.entity.TestEntity;
+
+import vsu.labs.crypto.entity.test.AnswerEntity;
+import vsu.labs.crypto.entity.test.QuestionEntity;
+import vsu.labs.crypto.entity.test.TaskEntity;
+import vsu.labs.crypto.entity.test.TestEntity;
 import vsu.labs.crypto.utils.PropertyMapper;
 
-import java.util.List;
 
 @Service @AllArgsConstructor
 public class TestService {

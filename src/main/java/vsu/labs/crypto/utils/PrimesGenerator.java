@@ -3,39 +3,58 @@ package vsu.labs.crypto.utils;
 import java.math.BigInteger;
 import java.util.Random;
 
-public class PrimesGenerator {
-    private static Random rand = new Random();
-    private static final BigInteger int3 = new BigInteger("3");
-    private static final BigInteger int2 = new BigInteger("2");
-    private static final BigInteger int1 = new BigInteger("1");
-    private static final int k = 64;
+public final class PrimesGenerator {
+    private static final Random rand = new Random();
+    private static final BigInteger INT_3 = new BigInteger("3");
+    private static final BigInteger INT_2 = new BigInteger("2");
+    private static final BigInteger INT_1 = new BigInteger("1");
+    private static final int NUMBER_OF_TESTS = 64;
 
 
-    private static boolean millerRabinTest(BigInteger value, int bits) {
-        if (value.equals(int2) || value.equals(int3))
+    private PrimesGenerator() {}
+
+
+    public static BigInteger getPrime(int bits) {
+        BigInteger probablyPrime = getRandValue(bits);
+        while (!isPrime(probablyPrime, bits)) {
+            probablyPrime = getRandValue(bits);
+        }
+        return probablyPrime;
+    }
+
+
+    public static int getPrimeInt(int bits) {
+        if (bits <= 1 || bits > 16)
+            throw new IllegalArgumentException("Wrong bits parameter");
+        return getPrime(bits).intValue();
+    }
+
+
+    private static boolean isPrime(BigInteger value, int bits) {
+        if (value.equals(INT_2) || value.equals(INT_3))
             return true;
         int s = 0;
-        BigInteger r = value.subtract(int1);
-        BigInteger d = value.subtract(int1);
-        while (!r.mod(int2).equals(int1)) {
-            r = r.divide(int2);
+        BigInteger r = value.subtract(INT_1);
+        BigInteger d = value.subtract(INT_1);
+        while (!r.mod(INT_2).equals(INT_1)) {
+            r = r.divide(INT_2);
             s++;
         }
 
-        for (int i = 0; i < k; ++i) {
+        for (int i = 0; i < NUMBER_OF_TESTS; ++i) {
             boolean isPrime = false;
-            BigInteger a = new BigInteger(bits - 1, rand);
-            while (a.compareTo(int2) < 0)
-                a = new BigInteger(bits - 1, rand);
-            BigInteger x = a.modPow(r, value);
-            if (!x.equals(int1)) {
-                if (x.equals(d))
+            BigInteger testValue = new BigInteger(bits - 1, rand);
+            while (testValue.compareTo(INT_2) < 0)
+                testValue = new BigInteger(bits - 1, rand);
+            BigInteger powerOfTestValue = testValue.modPow(r, value);
+            if (!powerOfTestValue.equals(INT_1)) {
+                if (powerOfTestValue.equals(d))
                     isPrime = true;
                 int j = 1;
                 while (j < s) {
-                    x = x.modPow(int2, value);
+                    powerOfTestValue = powerOfTestValue.modPow(INT_2, value);
                     j++;
-                    if (x.equals(d))
+                    if (powerOfTestValue.equals(d))
                         isPrime = true;
                 }
             }
@@ -50,27 +69,11 @@ public class PrimesGenerator {
 
 
     private static BigInteger getRandValue(int bits) {
-        BigInteger bigBit = new BigInteger("1").shiftLeft(bits - 1);
-        BigInteger x = new BigInteger(bits - 1, rand);
-        if (!x.mod(int2).equals(int1)) {
-            x = x.add(int1);
+        BigInteger highBit = new BigInteger("1").shiftLeft(bits - 1);
+        BigInteger randomValue = new BigInteger(bits - 1, rand);
+        if (!randomValue.mod(INT_2).equals(INT_1)) {
+            randomValue = randomValue.add(INT_1);
         }
-        return x.add(bigBit);
-    }
-
-
-    public static BigInteger getPrime(int bits) {
-        BigInteger value = getRandValue(bits);
-        while (!millerRabinTest(value, bits)) {
-            value = getRandValue(bits);
-        }
-        return value;
-    }
-
-
-    public static int getPrimeInt(int bits) {
-        if (bits <= 1 || bits > 16)
-            throw new IllegalArgumentException("Wrong bits parameter");
-        return getPrime(bits).intValue();
+        return randomValue.add(highBit);
     }
 }

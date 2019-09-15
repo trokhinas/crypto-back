@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data @AllArgsConstructor
 public class StageData {
-
     private String message;
     private Object data;
 

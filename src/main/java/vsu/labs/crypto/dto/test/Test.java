@@ -8,4 +8,5 @@ import java.util.List;
 public class Test {
     private Long testId;
     private List<Task> tasks;
+    private Integer mark;
 }

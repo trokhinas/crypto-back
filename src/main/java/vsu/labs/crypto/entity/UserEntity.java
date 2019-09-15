@@ -8,8 +8,8 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-// TODO добавить поле roleId в User
-public class User {
+// TODO добавить поле roleId в UserEntity
+public class UserEntity {
 
     @Id
     @Column(name = "id")

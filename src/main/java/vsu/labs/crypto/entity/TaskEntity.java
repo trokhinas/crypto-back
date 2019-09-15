@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Data
-public class Task {
+public class TaskEntity {
 
     @Id
     @Column(name = "id")
@@ -24,11 +24,11 @@ public class Task {
 
 
     @OneToMany(mappedBy = "task")
-    private List<Question> questionList;
+    private List<QuestionEntity> questionList;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id")
-    private Test test;
+    private TestEntity test;
 
 }

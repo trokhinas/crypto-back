@@ -22,13 +22,28 @@ public class TestRestController {
         return Response.success();
     }
 
-    @GetMapping("hello")
-    public String hello() {
-        return "hello";
+    @GetMapping("{id}")
+    public Response getTestById(@PathVariable Long id) {
+        log.info("call getTestById, with id = {}", id);
+        return Response.success();
     }
 
-    @GetMapping("helloResponse")
-    public Response helloResponse() {
-        return Response.success("hello");
+    @PutMapping
+    public Response updateTest(@RequestBody Test test) {
+        log.info("call update test");
+        return Response.success();
+    }
+
+    @PostMapping
+    public Response createTest(@RequestBody Test test) {
+        log.info("call update test");
+        testService.createTest(test);
+        return Response.success();
+    }
+
+    @DeleteMapping("{id}")
+    public Response deleteTest(@PathVariable Long id) {
+        log.info("call delete test with id = {}", id);
+        return Response.success();
     }
 }

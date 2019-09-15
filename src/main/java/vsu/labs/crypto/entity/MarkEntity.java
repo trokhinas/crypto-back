@@ -8,11 +8,11 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-public class Role {
+public class MarkEntity {
     @Id
     @Column(name = "id")
     private int id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "mark")
+    private int mark;
 }

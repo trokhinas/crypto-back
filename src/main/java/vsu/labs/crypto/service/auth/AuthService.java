@@ -32,7 +32,7 @@ public class AuthService {
         UserEntity user = userRepository.findByLogin(request.getLogin());
         if (user != null && user.getPassword().equals(getHash(request.getPassword()))) {
             // TODO реализовать получение RoleType по roleId из класса User
-            RoleEntity role = roleRepository.findId(user.getRoleId());
+            RoleEntity role = roleRepository.findById(user.getRoleId()).get();
             return new AuthResponse(user, RoleType.byId(role.getId()));
         }
         throw new LogicException(NO_AUTH);

@@ -5,7 +5,7 @@ import vsu.labs.crypto.enums.RoleType;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "role")
 @Data
 public class RoleEntity {
     @Id

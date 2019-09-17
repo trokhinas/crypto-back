@@ -12,23 +12,36 @@ import static vsu.labs.crypto.utils.math.MathConstants.TWO;
 public final class MathUtils {
     private static final Logger log = LoggerFactory.getLogger(MathUtils.class);
 
+    private static final String NO_SUCH_PRIMITIVE_ROOT = "Не существует первообразного корня по модулю %d";
+
     private MathUtils() { }
 
-    public boolean isCoprimeIntegers(Long a, Long b) {
+    public static boolean isCoprimeIntegers(Long a, Long b) {
         return getGCD(a, b) != 1;
     }
 
-    public boolean isCoprimeIntegers(Integer a, Integer b) {
+    public static boolean isCoprimeIntegers(Integer a, Integer b) {
         return getGCD((long) a, (long) b) != 1;
     }
 
-    public static Long eilerFunction(Long a) {
-        // TODO решить нужна ли нам вся функция эйлера или только ее реализация для простых чисел
-        return null;
+    public static Long eulerPrimeFunction(Long prime) {
+        return prime - 1;
     }
 
-    public static Long eilerPrimeFunction(Long prime) {
-        return prime - 1;
+    /*
+    * функция не тестировалась
+    * */
+    public static Long eulerFunction(Long n) {
+        Long result = n;
+        for (int i = 2; i * i <= n; ++i)
+            if (n % i == 0) {
+                while (n % i == 0)
+                    n /= i;
+                result -= result / i;
+            }
+        if (n > 1)
+            result -= result / n;
+        return result;
     }
 
     public static Long getGCD(Long a, Long b) {
@@ -83,5 +96,24 @@ public final class MathUtils {
                 return false;
         }
         return true;
+    }
+
+    public static boolean isPrimeDefault(BigInteger value) {
+        return isPrime(value, DEFAULT_NUMBER_PTIME_TESTS);
+    }
+
+    // TODO нужны тесты, функция не готова
+    public static Long getPrimitiveRootModuloN(Long n) {
+        if (n == null)
+            throw new IllegalStateException("n must not be null");
+        BigInteger value = BigInteger.valueOf(n);
+        Long power = isPrimeDefault(value) ? eulerPrimeFunction(n) : eulerFunction(n);
+        for (int i = 1; i < n; i++) {
+            Long result = (long) Math.pow(i, power);
+            if (result % n == 1)
+                return (long) i;
+        }
+        // TODO отдельные исключения
+        throw new LogicException(String.format(NO_SUCH_PRIMITIVE_ROOT, n));
     }
 }

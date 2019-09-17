@@ -20,4 +20,8 @@ public final class PrimesGenerator {
             throw new IllegalArgumentException("Wrong bits parameter");
         return getPrime(bits).intValue();
     }
+
+    public static long getPrimeLong(int bits) {
+        return getPrime(bits).longValue();
+    }
 }

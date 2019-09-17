@@ -17,6 +17,9 @@ public final class RandomUtils {
      * @return псевдослучайное число в диапазоне [from; to]
      */
     public static Integer getRandomInt(Integer from, Integer to) {
+        if (from >= to) {
+            throw new IllegalArgumentException("Left bound must not be greater than right");
+        }
         return from + RANDOM.nextInt(to - from + 1);
     }
 

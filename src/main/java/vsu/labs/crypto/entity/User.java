@@ -8,7 +8,6 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-// TODO добавить поле roleId в User
 public class User {
 
     @Id
@@ -28,6 +27,10 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+
+    @Column(name = "role_id")
+    private long roleId;
 
 
 }

@@ -11,7 +11,7 @@ import javax.persistence.Id;
 public class Mark {
     @Id
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @Column(name = "mark")
     private int mark;

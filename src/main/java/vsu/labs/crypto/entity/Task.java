@@ -12,7 +12,7 @@ public class Task {
 
     @Id
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @Basic
     @Column(name = "type")

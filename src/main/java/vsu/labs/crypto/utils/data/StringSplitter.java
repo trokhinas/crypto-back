@@ -1,4 +1,4 @@
-package vsu.labs.crypto.utils;
+package vsu.labs.crypto.utils.data;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;

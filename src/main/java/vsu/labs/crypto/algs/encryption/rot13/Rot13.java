@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vsu.labs.crypto.dto.crypto.PartitionAlgData;
 import vsu.labs.crypto.dto.crypto.StageData;
-import vsu.labs.crypto.utils.ListIncrementDataBuilder;
-import vsu.labs.crypto.utils.MessageUtils;
-import vsu.labs.crypto.utils.StringSplitter;
+import vsu.labs.crypto.utils.data.ListIncrementDataBuilder;
+import vsu.labs.crypto.utils.data.MessageUtils;
+import vsu.labs.crypto.utils.data.StringSplitter;
 
 import java.util.List;
 import java.util.stream.Collectors;

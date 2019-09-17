@@ -2,6 +2,7 @@ package vsu.labs.crypto.utils.math;
 
 import org.junit.Test;
 import org.springframework.data.util.Pair;
+import vsu.labs.crypto.config.UnitTest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.*;
 
-public class RandomUtilsTest {
+public class RandomUtilsTest extends UnitTest {
 
     private static final List<Pair<Integer, Integer>> BOUND_PAIRS = Arrays.asList(
             Pair.of(1, 1), Pair.of(1, 10),

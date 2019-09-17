@@ -1,6 +1,7 @@
 package vsu.labs.crypto.utils.math;
 
 import org.junit.Test;
+import vsu.labs.crypto.config.UnitTest;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -10,7 +11,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.*;
 
-public class PrimesGeneratorTest {
+public class PrimesGeneratorTest extends UnitTest {
 
     private static final Integer MAX_BITS = 16;
     private static final List<Integer> ERROR_COUNT_OF_BITS = Arrays.asList(

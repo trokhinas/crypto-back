@@ -3,12 +3,10 @@ package vsu.labs.crypto.controllers.auth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vsu.labs.crypto.dto.auth.LoginRequest;
 import vsu.labs.crypto.dto.response.Response;
+import vsu.labs.crypto.entity.JpaRepository.UserRepository;
 import vsu.labs.crypto.service.auth.AuthService;
 
 
@@ -19,7 +17,8 @@ public class AuthRestController {
 
     @Autowired
     private AuthService authService;
-
+    @Autowired
+    private UserRepository userRepository;
     @PostMapping("auth")
     public Response auth(@RequestBody LoginRequest request) {
         log.info("call auth");
@@ -30,5 +29,9 @@ public class AuthRestController {
     public Response fakeAuth() {
         log.info("call fakeAuth");
         return Response.success(authService.fakeAuth());
+    }
+    @GetMapping("test")
+    public String getLogin(){
+        return userRepository.findByLogin("tosha").getLogin();
     }
 }

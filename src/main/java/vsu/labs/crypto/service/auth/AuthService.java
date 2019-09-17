@@ -8,8 +8,8 @@ import vsu.labs.crypto.dto.auth.AuthResponse;
 import vsu.labs.crypto.dto.auth.LoginRequest;
 import vsu.labs.crypto.entity.JpaRepository.RoleRepository;
 import vsu.labs.crypto.entity.JpaRepository.UserRepository;
-import vsu.labs.crypto.entity.Role;
-import vsu.labs.crypto.entity.User;
+import vsu.labs.crypto.entity.security.UserEntity;
+import vsu.labs.crypto.entity.security.RoleEntity;
 import vsu.labs.crypto.enums.RoleType;
 import vsu.labs.crypto.exceptions.LogicException;
 
@@ -29,10 +29,10 @@ public class AuthService {
         if (request.getPassword() == null || request.getLogin() == null)
             throw new IllegalStateException();
 
-        User user = userRepository.findByLogin(request.getLogin());
+        UserEntity user = userRepository.findByLogin(request.getLogin());
         if (user != null && user.getPassword().equals(getHash(request.getPassword()))) {
             // TODO реализовать получение RoleType по roleId из класса User
-            Role role = roleRepository.findId(user.getRoleId());
+            RoleEntity role = roleRepository.findId(user.getRoleId());
             return new AuthResponse(user, RoleType.byId(role.getId()));
         }
         throw new LogicException(NO_AUTH);
@@ -40,7 +40,7 @@ public class AuthService {
 
     public AuthResponse fakeAuth() {
         log.info("start method fakeAuth");
-        User user = userRepository.findAll().get(0);
+        UserEntity user = userRepository.findAll().get(0);
         return new AuthResponse(user, RoleType.ADMIN);
     }
 

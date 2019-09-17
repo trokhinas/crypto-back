@@ -1,4 +1,4 @@
-package vsu.labs.crypto.entity;
+package vsu.labs.crypto.entity.security;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-public class User {
+public class UserEntity {
 
     @Id
     @Column(name = "id")

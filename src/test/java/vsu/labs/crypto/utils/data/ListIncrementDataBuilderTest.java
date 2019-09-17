@@ -1,4 +1,4 @@
-package vsu.labs.crypto.utils;
+package vsu.labs.crypto.utils.data;
 
 import org.junit.Test;
 import vsu.labs.crypto.config.UnitTest;

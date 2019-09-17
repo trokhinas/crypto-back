@@ -13,11 +13,15 @@ public final class RandomUtils {
     /**
      *
      * @param from - min граница
-     * @param to - max граница
+     * @param to - max граница(включена)
      * @return псевдослучайное число в диапазоне [from; to]
      */
     public static Integer getRandomInt(Integer from, Integer to) {
         return from + RANDOM.nextInt(to - from + 1);
+    }
+
+    public static BigInteger getBoundedBigInteger(BigInteger from, BigInteger to) {
+        return BigInteger.valueOf(getRandomInt(from.intValue(), to.intValue()));
     }
 
     public static BigInteger getRandBigInteger(int bits) {

@@ -1,4 +1,4 @@
-package vsu.labs.crypto.entity;
+package vsu.labs.crypto.entity.test;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-public class Answer {
+public class AnswerEntity {
     @Id
     @Column(name = "id")
     private Long id;
@@ -21,5 +21,5 @@ public class Answer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
-    private Question question;
+    private QuestionEntity question;
 }

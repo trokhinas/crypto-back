@@ -7,5 +7,5 @@ public interface MathConstants {
     BigInteger TWO = new BigInteger("2");
     BigInteger ONE = new BigInteger("1");
 
-    Integer DEFAULT_NUMBER_PTIME_TESTS = 64;
+    Integer COUNT_PRIME_TESTS = 64;
 }

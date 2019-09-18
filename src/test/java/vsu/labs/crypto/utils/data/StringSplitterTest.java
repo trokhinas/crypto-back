@@ -3,7 +3,6 @@ package vsu.labs.crypto.utils.data;
 import org.junit.Before;
 import org.junit.Test;
 import vsu.labs.crypto.config.UnitTest;
-import vsu.labs.crypto.utils.data.StringSplitter;
 
 import java.util.Arrays;
 import java.util.List;

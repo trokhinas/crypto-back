@@ -1,4 +1,4 @@
-package vsu.labs.crypto.utils;
+package vsu.labs.crypto.utils.data;
 
 import java.util.ArrayList;
 import java.util.List;

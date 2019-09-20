@@ -76,10 +76,10 @@ public final class MathUtils {
         return isPrime(value, MathConstants.COUNT_PRIME_TESTS);
     }
 
-    // TODO реализовать проверку
-    public static boolean isPrimitiveRootModuloN(BigInteger value, BigInteger n) {
-        return false;
-    }
+    public static boolean isPrimitiveRootModuloN(BigInteger root, BigInteger n) {
+        BigInteger exponent = euler(n);
+        return root.modPow(exponent, n).compareTo(ONE) == 0;
+}
 
     public static boolean isCoprimeIntegers(BigInteger left, BigInteger right) {
         return left.gcd(right).compareTo(ONE) != 0;

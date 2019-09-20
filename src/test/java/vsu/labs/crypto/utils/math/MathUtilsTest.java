@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.springframework.data.util.Pair;
 import vsu.labs.crypto.config.UnitTest;
 
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +32,16 @@ public class MathUtilsTest extends UnitTest {
             Pair.of(BigInteger.valueOf(55), BigInteger.valueOf(40)),
             Pair.of(BigInteger.valueOf(37), BigInteger.valueOf(36))
     );
+    private static final List<Pair<BigInteger, BigInteger>> ROOT_MODULE_PAIRS = Arrays.asList(
+            Pair.of(BigInteger.valueOf(1), BigInteger.valueOf(2)),
+            Pair.of(BigInteger.valueOf(2), BigInteger.valueOf(3)),
+            Pair.of(BigInteger.valueOf(3), BigInteger.valueOf(4)),
+            Pair.of(BigInteger.valueOf(2), BigInteger.valueOf(5)),
+            Pair.of(BigInteger.valueOf(5), BigInteger.valueOf(6)),
+            Pair.of(BigInteger.valueOf(3), BigInteger.valueOf(7)),
+            Pair.of(BigInteger.valueOf(2), BigInteger.valueOf(9)),
+            Pair.of(BigInteger.valueOf(3), BigInteger.valueOf(10))
+    );
 
     @Test
     public void calculatePercent() {
@@ -56,5 +67,15 @@ public class MathUtilsTest extends UnitTest {
                 assertEquals(expectedEulerValue, eulerValue);
             }
         });
+    }
+
+    @Test
+    public void isPrimitiveRootModuloN() {
+        ROOT_MODULE_PAIRS.forEach(pair -> {
+            BigInteger root = pair.getFirst();
+            BigInteger modulo = pair.getSecond();
+            assertTrue(MathUtils.isPrimitiveRootModuloN(root, modulo));
+        });
+        assertTrue(MathUtils.isPrimitiveRootModuloN(BigInteger.valueOf(3), BigInteger.valueOf(7)));
     }
 }

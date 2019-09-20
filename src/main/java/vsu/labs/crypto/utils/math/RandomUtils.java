@@ -1,5 +1,7 @@
 package vsu.labs.crypto.utils.math;
 
+import vsu.labs.crypto.utils.common.Bounds;
+
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -25,7 +27,7 @@ public final class RandomUtils {
 
     public static BigInteger getRandomBigInteger(BigInteger from, BigInteger to) {
         if (from.signum() == -1 || to.signum() == -1) {
-            // TODO реализовать алгоритм генерации для отрицательынх значений BigInteger
+            // TODO реализовать алгоритм генерации для отрицательынх значений BigInteger, если это необходимо
             throw new IllegalStateException("Implementation for negative BigInteger not ready yet");
         }
         if (from.compareTo(to) >= 0) {
@@ -38,6 +40,10 @@ public final class RandomUtils {
             randomNumber = new BigInteger(bits, RANDOM);
         }
         return randomNumber;
+    }
+
+    public static BigInteger getRandomBigInteger(Bounds bounds) {
+        return getRandomBigInteger(bounds.getLeft(), bounds.getRight());
     }
 
     public static BigInteger getRandBigInteger(int bits) {

@@ -75,4 +75,13 @@ public final class MathUtils {
     public static boolean isPrime(BigInteger value) {
         return isPrime(value, MathConstants.COUNT_PRIME_TESTS);
     }
+
+    // TODO реализовать проверку
+    public static boolean isPrimitiveRootModuloN(BigInteger value, BigInteger n) {
+        return false;
+    }
+
+    public static boolean isCoprimeIntegers(BigInteger left, BigInteger right) {
+        return left.gcd(right).compareTo(ONE) != 0;
+    }
 }

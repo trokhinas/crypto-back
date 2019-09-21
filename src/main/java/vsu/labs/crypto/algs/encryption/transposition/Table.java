@@ -4,8 +4,7 @@ import vsu.labs.crypto.algs.encryption.transposition.functions.TableAction;
 
 import java.math.BigInteger;
 
-import static vsu.labs.crypto.algs.encryption.transposition.functions.TableStepper.leftToRightStepper;
-import static vsu.labs.crypto.algs.encryption.transposition.functions.TableStepper.upToDownStepper;
+import static vsu.labs.crypto.algs.encryption.transposition.functions.TableStepper.*;
 
 class Table {
     private final String[][] table;
@@ -42,12 +41,12 @@ class Table {
     }
 
     private void inputLeftToRight(String message) {
-        TableAction inputAction = createInputAction(message);
+        TableAction inputAction = createLeftToRightInputAction(message);
         leftToRightStepper.run(table, inputAction);
     }
 
     private void inputUpToDown(String message) {
-        TableAction inputAction = createInputAction(message);
+        TableAction inputAction = createUpToDownInputAction(message);
         upToDownStepper.run(table, inputAction);
     }
 
@@ -65,9 +64,17 @@ class Table {
         return sb.toString();
     }
 
-    private TableAction createInputAction(String message) {
+    private TableAction createLeftToRightInputAction(String message) {
         return (table, rowIndex, columnIndex) -> {
             int index = rowIndex * size + columnIndex;
+            var symbol = index >= message.length() ? SPACING_SYMBOL : message.charAt(index);
+            table[rowIndex][columnIndex] += symbol;
+        };
+    }
+
+    private TableAction createUpToDownInputAction(String message) {
+        return (table, rowIndex, columnIndex) -> {
+            int index = columnIndex * size + rowIndex;
             var symbol = index >= message.length() ? SPACING_SYMBOL : message.charAt(index);
             table[rowIndex][columnIndex] += symbol;
         };

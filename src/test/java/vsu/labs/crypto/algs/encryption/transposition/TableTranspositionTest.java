@@ -1,14 +1,14 @@
 package vsu.labs.crypto.algs.encryption.transposition;
 
 import org.junit.Test;
+import vsu.labs.crypto.config.UnitTest;
 
 import static org.junit.Assert.*;
 import static vsu.labs.crypto.utils.math.MathConstants.THREE;
-import static vsu.labs.crypto.utils.math.MathConstants.TWO;
 
-public class TableTranspositionTest {
+public class TableTranspositionTest extends UnitTest {
 
-    private static final String TEST_VALUE = "Мама мыла";
+    private static final String TEST_VALUE = "Мама мыла раму";
 
     @Test
     public void encrypt() {

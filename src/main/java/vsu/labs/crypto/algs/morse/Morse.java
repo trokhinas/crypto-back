@@ -1,34 +1,56 @@
 package vsu.labs.crypto.algs.morse;
 
 import org.hibernate.result.Output;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import vsu.labs.crypto.algs.encryption.rot13.Rot13;
+import vsu.labs.crypto.dto.crypto.PartitionAlgData;
+import vsu.labs.crypto.dto.crypto.StageData;
+import vsu.labs.crypto.utils.data.ListIncrementDataBuilder;
+import vsu.labs.crypto.utils.data.MessageUtils;
+import vsu.labs.crypto.utils.data.StringSplitter;
+import vsu.labs.crypto.utils.math.MathUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
-public class Morse {
+public final class Morse {
+
+    private static final Logger log = LoggerFactory.getLogger(Morse.class);
+    private static final int PARTITION_SIZE = 4;
+    private static final StringSplitter splitter = StringSplitter.withPartitionSize(PARTITION_SIZE);
+
+    private static final String STAGE_MESSAGE = "Зашифровано %d процентов сообщения";
+    private static final String delimiter = " ";
+    private static final String delimiterOfWord = "  ";
+    final static char[] english = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+            'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
+            'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+            ',', '.', '?'};
+    final static String[] morse = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..",
+            ".---", "-.-", ".-..", "--", "-.", "---", ".---.", "--.-", ".-.",
+            "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..", ".----",
+            "..---", "...--", "....-", ".....", "-....", "--...", "---..", "----.",
+            "-----", "--..--", ".-.-.-", "..--.."};
+
+    private Morse() {
+    }
+
     public static String code(String message) {
         String output = new String();
-        String[] hadleMessage = message.split(" ");
+        String[] handleMessage = message.split(delimiter);
 
-        char[] english = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-                'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
-                'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-                ',', '.', '?'};
-
-        String[] morse = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..",
-                ".---", "-.-", ".-..", "--", "-.", "---", ".---.", "--.-", ".-.",
-                "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..", ".----",
-                "..---", "...--", "....-", ".....", "-....", "--...", "---..", "----.",
-                "-----", "--..--", ".-.-.-", "..--.."};
-        for (int j = 0; j < hadleMessage.length; j++) {
-            hadleMessage[j] = hadleMessage[j].toLowerCase();
-            for (char symb : hadleMessage[j].toCharArray()) {
+        for (int j = 0; j < handleMessage.length; j++) {
+            handleMessage[j] = handleMessage[j].toLowerCase();
+            for (char symb : handleMessage[j].toCharArray()) {
                 for (int i = 0; i < english.length; i++) {
-                    if (english[i] == symb) {
-                        output += morse[i]+" ";
-                    }
+                    if (english[i] == symb)
+                        output += morse[i] + " ";
                 }
             }
-            output+="  ";
+            output += delimiter;
         }
         System.out.println(output);
         return output;
@@ -36,34 +58,74 @@ public class Morse {
 
     public static String decode(String message) {
         String output = new String();
-        String[] hadleMessage = message.split("  ");
-        char[] english = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-                'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
-                'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-                ',', '.', '?'};
-
-        String[] morse = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..",
-                ".---", "-.-", ".-..", "--", "-.", "---", ".---.", "--.-", ".-.",
-                "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..", ".----",
-                "..---", "...--", "....-", ".....", "-....", "--...", "---..", "----.",
-        };
-        for (String x : hadleMessage) {
+        String[] handleMessage = message.split(delimiterOfWord);
+        for (String x : handleMessage) {
             String[] word = x.split(" ");
             for (int i = 0; i < word.length; i++) {
                 for (int k = 0; k < morse.length; k++) {
-                    if (word[i].toLowerCase().equals(""+morse[k])) {
-                        output += english[k]+" ";
-                    }
+                    if (word[i].toLowerCase().equals("" + morse[k]))
+                        output += english[k];
                 }
             }
-            output+="  ";
+            output += delimiter;
         }
         System.out.println(output);
         return output;
     }
 
+    public static PartitionAlgData stagingCode(String message) {
+        log.info("start method stagingCode with partition");
+        String output = new String();
+        String[] handleMessage = message.split(delimiter);
+        List<StageData> stageData = new ArrayList<>(10);
+        int counter = 0;
+        for (int j = 0; j < handleMessage.length; j++) {
+            handleMessage[j] = handleMessage[j].toLowerCase();
+            for (char symb : handleMessage[j].toCharArray()) {
+                for (int i = 0; i < english.length; i++) {
+                    if (english[i] == symb) {
+                        output += morse[i] + delimiter;
+                        stageData.add(counter, new StageData("" + (100.0 / message.toCharArray().length *counter), output));
+                        counter++;
+                    }
+                }
+            }
+            output += delimiterOfWord;
+            stageData.get(counter - 1).setData(stageData.get(counter - 1).getData() + "  ");
+        }
+
+        stageData.get(counter - 1).setMessage(""+100);
+        return new PartitionAlgData(stageData, output);
+    }
+
+    public static PartitionAlgData stagingDecode(String message) {
+        log.info("start method stagingDecode with partition");
+        List<StageData> stageData = new ArrayList<>();
+        String output = new String();
+        String[] handleMessage = message.split(delimiterOfWord);
+        int counter = 0,percent=0;
+        for (String x : handleMessage) {
+            percent++;
+            String[] word = x.split(delimiter);
+            for (int i = 0; i < word.length; i++) {
+                for (int k = 0; k < morse.length; k++) {
+                    if (word[i].toLowerCase().equals("" + morse[k])) {
+                        output += english[k];
+                    }
+                }
+            }
+            stageData.add(counter, new StageData("" + (100.0 / handleMessage.length * percent), output));
+            counter++;
+            output += delimiter;
+            stageData.get(counter-1).setData(stageData.get(counter-1).getData() + "  ");
+        }
+
+        stageData.get(counter - 1).setMessage(""+100);
+        return new PartitionAlgData(stageData, output);
+    }
+
     public static void main(String[] args) {
-        Morse.code("i am gay");
-        Morse.decode("..   .- --   --. .- -.--");
+        Morse.code("i am gay asd asdadasd as");
+        Morse.decode("..  .- --  --. .- -.--  .- ... -..  .- ... -.. .- -.. .- ... -..  .- ...");
     }
 }

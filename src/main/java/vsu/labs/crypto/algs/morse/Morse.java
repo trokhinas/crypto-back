@@ -52,8 +52,8 @@ public final class Morse {
             }
             output += delimiter;
         }
-        System.out.println(output);
-        return output;
+
+        return output.trim();
     }
 
     public static String decode(String message) {
@@ -69,8 +69,7 @@ public final class Morse {
             }
             output += delimiter;
         }
-        System.out.println(output);
-        return output;
+        return output.trim();
     }
 
     public static PartitionAlgData stagingCode(String message) {
@@ -90,12 +89,13 @@ public final class Morse {
                     }
                 }
             }
-            output += delimiterOfWord;
+            output += delimiter;
             stageData.get(counter - 1).setData(stageData.get(counter - 1).getData() + "  ");
         }
 
+        stageData.get(counter-1).setData((""+stageData.get(counter-1).getData()).trim());
         stageData.get(counter - 1).setMessage(""+100);
-        return new PartitionAlgData(stageData, output);
+        return new PartitionAlgData(stageData, output.trim());
     }
 
     public static PartitionAlgData stagingDecode(String message) {
@@ -119,13 +119,15 @@ public final class Morse {
             output += delimiter;
             stageData.get(counter-1).setData(stageData.get(counter-1).getData() + "  ");
         }
-
+        stageData.get(counter-1).setData((""+stageData.get(counter-1).getData()).trim());
         stageData.get(counter - 1).setMessage(""+100);
-        return new PartitionAlgData(stageData, output);
+        return new PartitionAlgData(stageData, output.trim());
     }
 
     public static void main(String[] args) {
-        Morse.code("i am gay asd asdadasd as");
-        Morse.decode("..  .- --  --. .- -.--  .- ... -..  .- ... -.. .- -.. .- ... -..  .- ...");
+        System.out.println(Morse.code("hey i am tired").equals(".... . -.--  ..  .- --  - .. .-. . -.."));
+        System.out.println(Morse.decode(".... . -.--  ..  .- --  - .. .-. . -..").equals("hey i am tired"));
+        System.out.println(stagingDecode("....  ..  .-  -. --- -  .-  --. .- -.--").getStageData().get(stagingDecode("....  ..  .-  -. --- -  .-  --. .- -.--").getStageData().size()-1).getData());
     }
+
 }

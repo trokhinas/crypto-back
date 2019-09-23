@@ -5,9 +5,12 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "answer")
 @Data
 public class AnswerEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "answer_seq")
+    @SequenceGenerator(name = "answer_seq", sequenceName = "answer_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 

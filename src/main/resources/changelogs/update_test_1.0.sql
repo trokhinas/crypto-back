@@ -29,7 +29,7 @@ create unique index user_login_uindex
 
 create table mark
 (
-	id integer not null
+	id bigserial not null
 		constraint mark_pkey
 			primary key,
 	user_id integer

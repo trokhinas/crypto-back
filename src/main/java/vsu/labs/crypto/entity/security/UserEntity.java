@@ -1,11 +1,10 @@
 package vsu.labs.crypto.entity.security;
 
 import lombok.Data;
+import vsu.labs.crypto.entity.test.CourseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -13,6 +12,8 @@ import javax.persistence.Table;
 public class UserEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
+    @SequenceGenerator(name = "users_seq", sequenceName = "users_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
@@ -34,5 +35,7 @@ public class UserEntity {
     @Column(name = "role_id")
     private long roleId;
 
+    @ManyToMany(mappedBy = "users")
+    private List<CourseEntity> courses;
 
 }

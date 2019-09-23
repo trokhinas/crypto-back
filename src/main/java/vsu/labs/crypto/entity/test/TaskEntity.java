@@ -6,9 +6,12 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "task")
 @Data
 public class TaskEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_seq")
+    @SequenceGenerator(name = "task_seq", sequenceName = "task_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 

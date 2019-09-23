@@ -7,9 +7,12 @@ import java.util.List;
 
 
 @Entity
+@Table(name = "question")
 @Data
 public class QuestionEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "question_seq")
+    @SequenceGenerator(name = "question_seq", sequenceName = "question_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 

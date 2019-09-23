@@ -22,5 +22,4 @@ public class CourseThemesEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private CourseEntity course;
-    
 }

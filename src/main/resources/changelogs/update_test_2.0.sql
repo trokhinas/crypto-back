@@ -17,7 +17,7 @@ create table course_themes
 	course_id integer
 		constraint course_themes_course_id_fk
 			references course,
-	author_id integer
+	user_id integer
 		constraint course_themes_users_id_fk
 			references users
 )

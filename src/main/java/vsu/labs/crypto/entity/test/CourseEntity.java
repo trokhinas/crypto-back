@@ -21,7 +21,7 @@ public class CourseEntity {
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinTable(name = "course_themes",
             joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "users_id"))
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<UserEntity> users;
 
     @OneToMany(mappedBy = "course")

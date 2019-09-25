@@ -7,12 +7,13 @@ create table course
 )
 ;
 
-create table course_themes
+create table lecture
 (
 	id bigserial not null
 		constraint course_themes_pkey
 			primary key,
 	name varchar(200),
+	number integer,
 	reference varchar(200),
 	course_id integer
 		constraint course_themes_course_id_fk

@@ -4,15 +4,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import vsu.labs.crypto.config.IntegrationTest;
 import vsu.labs.crypto.entity.JpaRepository.CourseRepository;
-import vsu.labs.crypto.entity.JpaRepository.CourseThemesRepository;
+import vsu.labs.crypto.entity.JpaRepository.LectureRepository;
 import vsu.labs.crypto.entity.JpaRepository.RoleRepository;
 import vsu.labs.crypto.entity.JpaRepository.UserRepository;
 import vsu.labs.crypto.entity.security.RoleEntity;
 import vsu.labs.crypto.entity.security.UserEntity;
 import vsu.labs.crypto.enums.RoleType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class CourseEntityTest extends IntegrationTest {
@@ -23,7 +20,7 @@ public class CourseEntityTest extends IntegrationTest {
     @Autowired
     CourseRepository courseRepository;
     @Autowired
-    CourseThemesRepository courseThemesRepository;
+    LectureRepository lectureRepository;
     @Test
     public void name() {
         RoleEntity roleEntity = new RoleEntity();
@@ -43,13 +40,13 @@ public class CourseEntityTest extends IntegrationTest {
         courseEntity.getUsers().add(userEntity);
         CourseEntity courseSaved = courseRepository.save(courseEntity);
 
-        CourseThemesEntity courseThemesEntity = new CourseThemesEntity();
-        courseThemesEntity.setName("asdf");
-        courseThemesEntity.setReference("asdf");
-        courseThemesEntity.setCourse(courseSaved);
-        CourseThemesEntity savedCourseThemes = courseThemesRepository.save(courseThemesEntity);
+        LectureEntity lectureEntity = new LectureEntity();
+        lectureEntity.setName("asdf");
+        lectureEntity.setReference("asdf");
+        lectureEntity.setCourse(courseSaved);
+        LectureEntity savedCourseThemes = lectureRepository.save(lectureEntity);
 
-        courseThemesRepository.delete(savedCourseThemes);
+        lectureRepository.delete(savedCourseThemes);
         courseRepository.delete(courseSaved);
         userRepository.delete(userSaved);
         roleRepository.delete(roleSaved);

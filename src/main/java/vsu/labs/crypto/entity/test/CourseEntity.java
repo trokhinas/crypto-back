@@ -25,5 +25,5 @@ public class CourseEntity {
     private List<UserEntity> users;
 
     @OneToMany(mappedBy = "course")
-    private List<CourseThemesEntity> courseThemesEntityList;
+    private List<LectureEntity> lectureEntityList;
 }

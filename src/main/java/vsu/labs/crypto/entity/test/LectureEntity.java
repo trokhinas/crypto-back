@@ -4,12 +4,12 @@ import lombok.Data;
 
 import javax.persistence.*;
 
-@Entity(name = "course_themes")
+@Entity(name = "lecture")
 @Data
-public class CourseThemesEntity {
+public class LectureEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_themes_seq")
-    @SequenceGenerator(name = "course_themes_seq", sequenceName = "course_themes_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "lecture_seq")
+    @SequenceGenerator(name = "lecture_seq", sequenceName = "lecture_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 

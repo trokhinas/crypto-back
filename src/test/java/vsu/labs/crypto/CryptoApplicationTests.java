@@ -13,4 +13,12 @@ public class CryptoApplicationTests extends IntegrationTest {
     public void contextLoads() {
     }
 
+    @Test
+    public void name() {
+    }
+
+    @Test
+    public void name1() {
+
+    }
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.util.Pair;
+import vsu.labs.crypto.algs.encryption.elgamal.utils.GenerationUtils;
 import vsu.labs.crypto.utils.common.Bounds;
 import vsu.labs.crypto.utils.math.MathUtils;
 import vsu.labs.crypto.utils.math.ModularUtils;
@@ -42,7 +43,6 @@ public final class ElGamal {
         return Pair.of(gamma, beta);
     }
 
-    // TODO не работает функция расшифровки, возможно проблема в формуле: надо изучить операции по модулю
     public static BigInteger decrypt(Pair<BigInteger, BigInteger> text, OpenKey openKey, SecretKey secretKey) {
         log.info("process method decrypt with text = {}, openKey = {}, secretKey = {}", text, openKey, secretKey);
         BigInteger gamma = text.getFirst();
@@ -59,24 +59,18 @@ public final class ElGamal {
     // но не для всех модулей существуют примитивыне корни
     private static BigInteger getPrimitiveRoot(BigInteger modulo) {
         log.info("searching primitive root modulo = {}", modulo);
-        BigInteger probablyRoot = RandomUtils.getRandBigInteger(P_BITS);
-        while (!MathUtils.isPrimitiveRootModuloN(probablyRoot, modulo)) {
-            probablyRoot = RandomUtils.getRandBigInteger(P_BITS);
-            log.info("current root = {}", probablyRoot);
-        }
-
-        return probablyRoot;
+        return GenerationUtils.whileWithTimeout(
+                value -> MathUtils.isPrimitiveRootModuloN(value, modulo),
+                () -> RandomUtils.getRandBigInteger(P_BITS)
+        );
     }
 
     private static BigInteger getCoprimeIntegerWith(BigInteger value, Bounds bounds) {
         log.info("searching coprime integer with value = {}, in bounds [{}, {}]", value , bounds.getLeft(), bounds.getRight());
-        BigInteger randomX = RandomUtils.getRandomBigInteger(bounds.getLeft(), bounds.getRight());
-        while (!MathUtils.isCoprimeIntegers(randomX, value.subtract(ONE))) {
-            randomX = RandomUtils.getRandomBigInteger(bounds.getLeft(), bounds.getRight());
-            log.info("current random = {}", randomX);
-        }
-
-        return randomX;
+        return GenerationUtils.whileWithTimeout(
+                random -> MathUtils.isCoprimeIntegers(random, value.subtract(ONE)),
+                () -> RandomUtils.getRandomBigInteger(bounds.getLeft(), bounds.getRight())
+        );
     }
 
     @AllArgsConstructor

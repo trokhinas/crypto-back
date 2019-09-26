@@ -3,12 +3,14 @@ package vsu.labs.crypto.algs.encryption.transposition;
 import org.junit.Test;
 import vsu.labs.crypto.config.UnitTest;
 
+import java.math.BigInteger;
+
 import static org.junit.Assert.*;
-import static vsu.labs.crypto.utils.math.MathConstants.THREE;
 
 public class TableTranspositionTest extends UnitTest {
 
     private static final String TEST_VALUE = "Мама мыла раму";
+    private static final BigInteger KEY = BigInteger.valueOf(312);
 
     @Test
     public void encrypt() {
@@ -22,9 +24,8 @@ public class TableTranspositionTest extends UnitTest {
 
     @Test
     public void testAlg() {
-        var encryptedPair = TableTransposition.encrypt(TEST_VALUE, THREE);
-        String messageWithSpacing = encryptedPair.getSecond();
+        var encryptedMessage = TableTransposition.encrypt(TEST_VALUE, KEY);
 
-        assertEquals(TEST_VALUE, TableTransposition.decrypt(messageWithSpacing, THREE));
+        assertEquals(TEST_VALUE, TableTransposition.decrypt(encryptedMessage, KEY));
     }
 }

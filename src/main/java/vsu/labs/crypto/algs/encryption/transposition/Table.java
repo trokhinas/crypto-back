@@ -1,25 +1,41 @@
 package vsu.labs.crypto.algs.encryption.transposition;
 
 import vsu.labs.crypto.algs.encryption.transposition.functions.TableAction;
+import vsu.labs.crypto.algs.encryption.transposition.functions.TableStepper;
+import vsu.labs.crypto.algs.encryption.transposition.utils.OrderedColumnsListBuilder;
+import vsu.labs.crypto.algs.encryption.transposition.utils.StringWithCounter;
+import vsu.labs.crypto.exceptions.LogicException;
 
 import java.math.BigInteger;
+import java.util.List;
 
-import static vsu.labs.crypto.algs.encryption.transposition.functions.TableStepper.*;
+import static vsu.labs.crypto.algs.encryption.transposition.functions.TableStepper.leftToRightStepper;
 
-class Table {
+final class Table {
     private final String[][] table;
+    private final int rowCount;
+    private final int columnCount;
     private final int size;
+
+    private final List<Integer> orderedColumnsList;
+
     private static final String EMPTY_CELL = "";
     static final String SPACING_SYMBOL = "_";
 
-    private Table(BigInteger size) {
+    private Table(BigInteger size, BigInteger key) {
         this.size = size.intValue();
-        table = new String[this.size][this.size];
+        this.orderedColumnsList = OrderedColumnsListBuilder.buildList(key);
+        table = initTable(orderedColumnsList.size());
+
+        this.rowCount = table.length;
+        this.columnCount = orderedColumnsList.size();
         clear();
     }
 
-    static Table withSize(BigInteger size) {
-        return new Table(size);
+    static Table withSize(BigInteger size, BigInteger key) {
+        if (key.toString().length() < 2)
+            throw new LogicException("Ключ должен содержать как минимум 2 цифры!");
+        return new Table(size, key);
     }
 
     String encrypt(String message) {
@@ -46,14 +62,18 @@ class Table {
     }
 
     private void inputUpToDown(String message) {
+        TableStepper stepper = createColumnUpToDownStepper();
         TableAction inputAction = createUpToDownInputAction(message);
-        upToDownStepper.run(table, inputAction);
+
+        stepper.run(table, inputAction);
     }
 
     private String readUpToDown() {
+        TableStepper stepper = createColumnUpToDownStepper();
         StringBuilder sb = new StringBuilder();
         TableAction readAction = createReadAction(sb);
-        upToDownStepper.run(table, readAction);
+
+        stepper.run(table, readAction);
         return sb.toString();
     }
 
@@ -65,25 +85,55 @@ class Table {
     }
 
     private TableAction createLeftToRightInputAction(String message) {
+        StringWithCounter stringWithCounter = StringWithCounter.withString(message);
         return (table, rowIndex, columnIndex) -> {
-            int index = rowIndex * size + columnIndex;
-            var symbol = index >= message.length() ? SPACING_SYMBOL : message.charAt(index);
-            table[rowIndex][columnIndex] += symbol;
+            if (!isDisabledCell(rowIndex, columnIndex))
+                table[rowIndex][columnIndex] += stringWithCounter.getOne();
         };
     }
 
     private TableAction createUpToDownInputAction(String message) {
+        StringWithCounter stringWithCounter = StringWithCounter.withString(message);
         return (table, rowIndex, columnIndex) -> {
-            int index = columnIndex * size + rowIndex;
-            var symbol = index >= message.length() ? SPACING_SYMBOL : message.charAt(index);
-            table[rowIndex][columnIndex] += symbol;
+            if (!isDisabledCell(rowIndex, columnIndex))
+                table[rowIndex][columnIndex] += stringWithCounter.getOne();
         };
     }
 
     private TableAction createReadAction(StringBuilder stringBuilder) {
         return (table, rowIndex, columnIndex) -> {
             String symbol = table[rowIndex][columnIndex];
-            stringBuilder.append(symbol);
+            if (!isDisabledCell(rowIndex, columnIndex))
+                stringBuilder.append(symbol);
         };
+    }
+
+    private TableStepper createColumnUpToDownStepper() {
+        return (table, action) -> {
+            for (int i = 0; i < orderedColumnsList.size(); i++) {
+                int columnIndex = orderedColumnsList.get(i);
+                for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+                    action.act(table, rowIndex, columnIndex);
+                }
+            }
+        };
+    }
+
+    private String[][] initTable(Integer columnsCount) {
+        int fullRowsCount = size / columnsCount;
+        if (size % columnsCount != 0)
+            fullRowsCount ++;
+
+        return new String[fullRowsCount][columnsCount];
+    }
+
+    private boolean isDisabledCell(int rowIndex, int columnIndex) {
+        int lastRowIndex = rowCount - 1;
+
+        if (rowIndex == lastRowIndex) {
+            int lastAccessedColumnIndex = size % columnCount - 1;
+            return columnIndex > lastAccessedColumnIndex;
+        }
+        return false;
     }
 }

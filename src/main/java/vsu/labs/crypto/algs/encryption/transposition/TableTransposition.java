@@ -1,69 +1,27 @@
 package vsu.labs.crypto.algs.encryption.transposition;
 
-import org.springframework.data.util.Pair;
-import vsu.labs.crypto.utils.data.StringSplitter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigInteger;
-import java.util.List;
 
+@Slf4j
 public final class TableTransposition {
 
-    // Pair - пара из двух строчек:
-    // first - вывод алгоритма, с дополняющими символами, только его можно корректно расшифровать
-    // second - строка first без дополняющих символов, для демонтрсации пользователю
-    // Такой вакханалии можно избежать, запрещая шифровать строки в таблицы неподходящего размера.
-    public static Pair<String, String> encrypt(String source, BigInteger key) {
-        int tableSize = getTableSize(key);
-        List<String> parts = StringSplitter.withPartitionSize(tableSize).splitIntoParts(source);
+    public static String encrypt(String source, BigInteger key) {
+        log.info("process method encrypt with source = {}, key = {}", source, key);
+        Table table = Table.withSize(BigInteger.valueOf(source.length()), key);
 
-        String encryptedMessageWithSpacing = encryptByParts(parts, key);
-        String encryptedMessageForUser = buildMessageForUser(encryptedMessageWithSpacing);
-        return Pair.of(encryptedMessageForUser, encryptedMessageWithSpacing);
+        return table.encrypt(source);
     }
 
-    public static String decrypt(String encryptedSourceWithSpacing, BigInteger key) {
-        int tableSize = getTableSize(key);
-        List<String> parts = StringSplitter.withPartitionSize(tableSize).splitIntoParts(encryptedSourceWithSpacing);
+    public static String decrypt(String source, BigInteger key) {
+        log.info("process method decrypt with source = {}, key = {}", source, key);
+        Table table = Table.withSize(BigInteger.valueOf(source.length()), key);
 
-        String messageWithSpacing =  decryptByParts(parts, key);
-        return buildMessageForUser(messageWithSpacing);
-    }
-
-    private static String encryptByParts(List<String> parts, BigInteger key) {
-        StringBuilder sb = new StringBuilder();
-
-        for (String part: parts) {
-            var encryptedPart = encryptPart(part, key);
-            sb.append(encryptedPart);
-        }
-        return sb.toString();
-    }
-
-    private static String decryptByParts(List<String> parts, BigInteger key) {
-        StringBuilder sb = new StringBuilder();
-
-        for (String part: parts) {
-            var encryptedPart = decryptPart(part, key);
-            sb.append(encryptedPart);
-        }
-        return sb.toString();
-    }
-
-    private static String decryptPart(String part, BigInteger key) {
-        Table table = Table.withSize(key);
-        return table.decrypt(part);
-    }
-
-    private static String encryptPart(String part, BigInteger key) {
-        Table table = Table.withSize(key);
-        return table.encrypt(part);
+        return table.decrypt(source);
     }
 
     private static String buildMessageForUser(String message) {
         return message.replaceAll(Table.SPACING_SYMBOL, "");
-    }
-
-    private static int getTableSize(BigInteger key) {
-        return key.pow(2).intValue();
     }
 }

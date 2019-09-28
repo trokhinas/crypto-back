@@ -2,6 +2,8 @@ package vsu.labs.crypto.entity.security;
 
 import lombok.Data;
 import vsu.labs.crypto.entity.test.CourseEntity;
+import vsu.labs.crypto.entity.test.LectureEntity;
+import vsu.labs.crypto.entity.test.QuestionEntity;
 
 import javax.persistence.*;
 import java.util.List;
@@ -38,4 +40,6 @@ public class UserEntity {
     @ManyToMany(mappedBy = "users")
     private List<CourseEntity> courses;
 
+    @OneToMany(mappedBy = "author")
+    private List<LectureEntity> lectures;
 }

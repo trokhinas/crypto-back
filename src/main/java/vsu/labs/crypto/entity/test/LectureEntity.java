@@ -1,6 +1,8 @@
 package vsu.labs.crypto.entity.test;
 
 import lombok.Data;
+import org.apache.tomcat.jni.User;
+import vsu.labs.crypto.entity.security.UserEntity;
 
 import javax.persistence.*;
 
@@ -22,4 +24,8 @@ public class LectureEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private CourseEntity course;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity author;
 }

@@ -19,7 +19,7 @@ public class CourseEntity {
     private String name;
 
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinTable(name = "course_themes",
+    @JoinTable(name = "users",
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<UserEntity> users;

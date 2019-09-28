@@ -31,4 +31,10 @@ public class TestRestController {
     public Response helloResponse() {
         return Response.success("hello");
     }
+
+    @PostMapping("addTest")
+    public boolean addTest(@RequestBody Test test){
+
+        return true;
+    }
 }

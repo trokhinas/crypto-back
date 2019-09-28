@@ -11,6 +11,9 @@ import vsu.labs.crypto.entity.security.RoleEntity;
 import vsu.labs.crypto.entity.security.UserEntity;
 import vsu.labs.crypto.enums.RoleType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class CourseEntityTest extends IntegrationTest {
     @Autowired
@@ -37,7 +40,9 @@ public class CourseEntityTest extends IntegrationTest {
 
         CourseEntity courseEntity = new CourseEntity();
         courseEntity.setName("first");
-        courseEntity.getUsers().add(userEntity);
+        List<UserEntity> userEntityList = new ArrayList<>();
+        userEntityList.add(userEntity);
+        courseEntity.setUsers(userEntityList);
         CourseEntity courseSaved = courseRepository.save(courseEntity);
 
         LectureEntity lectureEntity = new LectureEntity();

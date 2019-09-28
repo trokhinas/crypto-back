@@ -17,4 +17,6 @@ public class MarkEntity {
 
     @Column(name = "mark")
     private Integer mark;
+
+
 }

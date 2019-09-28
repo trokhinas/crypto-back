@@ -26,14 +26,11 @@ public class TaskEntityTest extends IntegrationTest {
         TestEntity savedTest = testRepository.save(testEntity);
 
         TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setName("firstOfFirst");
-        taskEntity.setType("input");
         taskEntity.setTest(savedTest);
         TaskEntity savedTask = taskRepository.save(taskEntity);
 
         QuestionEntity questionEntity = new QuestionEntity();
         questionEntity.setName("firstOfFirstOfFirst");
-        questionEntity.setTask(savedTask);
         QuestionEntity savedQuestion = questionRepository.save(questionEntity);
 
         AnswerEntity answerEntity = new AnswerEntity();

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Test {
+public class TestDto {
     private Long testId;
-    private List<Task> tasks;
+    private List<TaskDto> tasks;
 }

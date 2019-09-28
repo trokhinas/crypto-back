@@ -20,10 +20,10 @@ public class QuestionEntity {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "question")
     private List<AnswerEntity> answerList;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_id")
-    private TaskEntity task;
+    @OneToMany(mappedBy = "question")
+    private List<TaskEntity> taskList;
+
 }

@@ -3,6 +3,8 @@ package vsu.labs.crypto.entity.test;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "test")
@@ -16,5 +18,9 @@ public class TestEntity {
 
     @Column(name = "title")
     private String title;
+
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "test")
+    private List<TaskEntity> tasks = new ArrayList<>();
 }
 

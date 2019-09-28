@@ -3,6 +3,7 @@ package vsu.labs.crypto.entity.test;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,18 +16,16 @@ public class TaskEntity {
     @Column(name = "id")
     private Long id;
 
-    @Basic
-    @Column(name = "type")
-    private String type;
-
-    @Basic
-    @Column(name = "name")
-    private String name;
-
-    @OneToMany(mappedBy = "task")
-    private List<QuestionEntity> questionList;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id")
     private TestEntity test;
+
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
+    private QuestionEntity question;
+
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "type_id")
+    private TaskTypeEntity taskType;
 }

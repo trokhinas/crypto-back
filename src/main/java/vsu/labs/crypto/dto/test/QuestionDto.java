@@ -5,8 +5,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Question {
+public class QuestionDto {
     private Long questionId;
     private String text;
-    private List<Answer> answers;
+    private List<AnswerDto> answers;
 }

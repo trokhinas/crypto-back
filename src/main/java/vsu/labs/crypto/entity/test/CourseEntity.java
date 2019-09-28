@@ -4,6 +4,7 @@ import lombok.Data;
 import vsu.labs.crypto.entity.security.UserEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "course")
@@ -19,11 +20,11 @@ public class CourseEntity {
     private String name;
 
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinTable(name = "users",
+    @JoinTable(name = "subscribed_courses",
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<UserEntity> users;
+    private List<UserEntity> users = new ArrayList<>();
 
     @OneToMany(mappedBy = "course")
-    private List<LectureEntity> lectureEntityList;
+    private List<LectureEntity> lectureEntityList = new ArrayList<>();
 }

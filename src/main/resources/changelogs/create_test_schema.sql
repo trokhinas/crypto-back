@@ -40,12 +40,6 @@ create table task
 )
 ;
 
-alter table task owner to postgres
-;
-
-
-alter table task owner to postgres
-;
 
 
 

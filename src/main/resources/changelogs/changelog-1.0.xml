@@ -8,6 +8,10 @@
     <include file="classpath:changelogs/create_test_schema.sql"/>
     <include file="classpath:changelogs/update_test_1.0.sql"/>
     <include file="classpath:changelogs/update_test_2.0.sql"/>
+    <include file="classpath:changelogs/data_for_test_3.0.sql"/>
+    <include file="classpath:changelogs/data_for_test_3.1.sql"/>
+    <include file="classpath:changelogs/data_for_test_3.2.sql"/>
+    <include file="classpath:changelogs/data_for_test_3.3.sql"/>
 
 
     <!--test-data-->

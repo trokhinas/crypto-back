@@ -1,5 +1,6 @@
 package vsu.labs.crypto.service.test;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vsu.labs.crypto.dto.mapper.QuestionMapper;
@@ -13,18 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class QuestionService {
     private final QuestionRepository questionRepository;
     private final QuestionMapper questionMapper;
 
-    @Autowired
-    public QuestionService(QuestionRepository questionRepository, QuestionMapper questionMapper) {
-        this.questionRepository = questionRepository;
-        this.questionMapper = questionMapper;
-    }
-
-
-    public List<QuestionDto> getAllQustioOfType(TaskType type) {
+    public List<QuestionDto> getAllQuestionByType(TaskType type) {
         List<QuestionEntity> allQuestion = questionRepository.findAll();
         List<QuestionEntity> result = new ArrayList<>();
         switch (type) {

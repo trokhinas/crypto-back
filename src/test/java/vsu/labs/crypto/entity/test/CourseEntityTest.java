@@ -17,13 +17,10 @@ import java.util.Collections;
 
 public class CourseEntityTest extends IntegrationTest {
     @Autowired
-    RoleRepository roleRepository;
+    private CourseRepository courseRepository;
     @Autowired
-    UserRepository userRepository;
-    @Autowired
-    CourseRepository courseRepository;
-    @Autowired
-    LectureRepository lectureRepository;
+    private LectureRepository lectureRepository;
+
     @Test
     public void name() {
         UserEntity userEntity = new UserEntity();

@@ -1,6 +1,7 @@
 package vsu.labs.crypto.entity.test;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,7 +21,7 @@ public class QuestionEntity {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "question")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "question", fetch = FetchType.EAGER)
     private List<AnswerEntity> answerList;
 
     @OneToMany(mappedBy = "question")

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import vsu.labs.crypto.algs.sha_1.Sha1;
 import vsu.labs.crypto.dto.auth.AuthResponse;
 import vsu.labs.crypto.dto.auth.LoginRequest;
 import vsu.labs.crypto.entity.JpaRepository.UserRepository;
@@ -25,7 +26,7 @@ public class AuthService {
             throw new IllegalStateException();
 
         UserEntity user = userRepository.findByLogin(request.getLogin());
-        if (user != null && user.getPassword().equals(getHash(request.getPassword()))) {
+        if (user != null && user.getPassword().equalsIgnoreCase(getHash(request.getPassword()))) {
             return new AuthResponse(user, RoleType.byId(user.getRoleId()));
         }
         throw new LogicException(NO_AUTH);
@@ -39,7 +40,6 @@ public class AuthService {
 
     // TODO реализовать функцию получению хэша от пароля
     private String getHash(String password) {
-
-        return password;
+        return Sha1.sha1(password);
     }
 }

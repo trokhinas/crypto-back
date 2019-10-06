@@ -56,6 +56,18 @@ final class Table {
         }
     }
 
+    public int getRowCount() {
+        return rowCount;
+    }
+
+    public int getColumnCount() {
+        return columnCount;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
     private void inputLeftToRight(String message) {
         TableAction inputAction = createLeftToRightInputAction(message);
         leftToRightStepper.run(table, inputAction);
@@ -132,7 +144,7 @@ final class Table {
 
         if (rowIndex == lastRowIndex) {
             int lastAccessedColumnIndex = size % columnCount - 1;
-            return columnIndex > lastAccessedColumnIndex;
+            return lastAccessedColumnIndex != -1 && columnIndex > lastAccessedColumnIndex;
         }
         return false;
     }

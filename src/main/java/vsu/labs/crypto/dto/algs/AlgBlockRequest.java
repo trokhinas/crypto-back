@@ -3,9 +3,9 @@ package vsu.labs.crypto.dto.algs;
 import lombok.Data;
 import vsu.labs.crypto.algs.common.ControlPanelBlock;
 
-import java.util.List;
+import java.util.Map;
 
 @Data
 public class AlgBlockRequest {
-    private List<ControlPanelBlock> blocks;
+    private Map<String, ControlPanelBlock> blocks;
 }

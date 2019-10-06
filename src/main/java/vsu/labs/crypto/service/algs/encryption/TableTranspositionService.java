@@ -1,76 +1,65 @@
 package vsu.labs.crypto.service.algs.encryption;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import vsu.labs.crypto.algs.common.BlocksResponse;
 import vsu.labs.crypto.algs.common.ControlPanelBlock;
 import vsu.labs.crypto.algs.encryption.transposition.TableTransposition;
-import vsu.labs.crypto.exceptions.LogicException;
+import vsu.labs.crypto.dto.crypto.PartitionAlgData;
+import vsu.labs.crypto.service.algs.common.DefaultBlocksChecker;
+import vsu.labs.crypto.utils.algs.BlockBuilder;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TableTranspositionService {
 
+    private static final List<String> REQUIRED_BLOCKS = Arrays.asList("text", "key");
+
     public BlocksResponse getAlgorithmBlocks() {
-        ControlPanelBlock textBlock = new ControlPanelBlock();
-        textBlock.setId("text");
-        textBlock.setName("Текст");
-        textBlock.setValue(""); // это опционально
+        Map<String, ControlPanelBlock> blockMap = BlockBuilder.buildMap()
+                .withBlock("text", "Текст")
+                .withBlock("key", "Ключ")
+                .build();
 
-        ControlPanelBlock keyBlock = new ControlPanelBlock();
-        keyBlock.setId("key");
-        keyBlock.setName("Ключ");
-        keyBlock.setValue(""); // это опционально
-
-        return BlocksResponse.withEncrypt(new ArrayList<>(Arrays.asList(textBlock, keyBlock)));
+        return BlocksResponse.withEncrypt(blockMap);
     }
 
-    public String startAlgorithm(List<ControlPanelBlock> blocks) {
+    public String encrypt(Map<String, ControlPanelBlock> blocks) {
         checkBlocks(blocks);
-        // если проверка пройдена, то мы просто распаковываем блоки и запускаем алгоритм
-        // здесь происходит парсинг блоков, который тоже выносится в отдельные функции
-        var source = blocks.stream().filter(x -> x.getId().equals("text")).findFirst().get().getValue();
-        var key = BigInteger.valueOf(
-                Long.parseLong(
-                        blocks.stream().filter(x -> x.getId().equals("key")).findFirst().get().getValue()
-                )
-        );
-        return TableTransposition.encrypt(source, key);
+        String text = getValueFromBlockWithId("text", blocks);
+        BigInteger key = BigInteger.valueOf(Long.parseLong(getValueFromBlockWithId("key", blocks)));
+        return TableTransposition.encrypt(text, key);
     }
 
-    // под каждый id блока можно написать свой обработчик, чтобы не городить городушки
-    // а абстрагировать работу в отдельных обработчиках
-    private void checkBlocks(List<ControlPanelBlock> blocks) {
-        var textBlock = blocks.stream().filter(x -> x.getId().equals("text")).findFirst();
+    public String decrypt(Map<String, ControlPanelBlock> blocks) {
+        checkBlocks(blocks);
+        String text = getValueFromBlockWithId("text", blocks);
+        BigInteger key = BigInteger.valueOf(Long.parseLong(getValueFromBlockWithId("key", blocks)));
+        return TableTransposition.decrypt(text, key);
+    }
 
-        //TODO блоки с обработкой выдепляются в отдельные хэндлеры
+    public PartitionAlgData stagingEncrypt(Map<String, ControlPanelBlock> blocks) {
+        checkBlocks(blocks);
+        String text = getValueFromBlockWithId("text", blocks);
+        BigInteger key = BigInteger.valueOf(Long.parseLong(getValueFromBlockWithId("key", blocks)));
+        return TableTransposition.stagingEncrypt(text, key);
+    }
 
-        // обработка блока (тут в основном проверки)
-        if (textBlock.isEmpty())
-            // такой ситуации по идее быть не должно, так что это непредвиденная ошибка
-            throw new IllegalStateException();
-        var block = textBlock.get();
-        var value = block.getValue();
-        if (StringUtils.isEmpty(value)) {
-            throw new LogicException("Не заполнен блок " + block.getName());
-        }
-        // обработка блока
-        var keyBlock = blocks.stream().filter(x -> x.getId().equals("key")).findFirst();
+    public PartitionAlgData stagingDecrypt(Map<String, ControlPanelBlock> blocks) {
+        checkBlocks(blocks);
+        String text = getValueFromBlockWithId("text", blocks);
+        BigInteger key = BigInteger.valueOf(Long.parseLong(getValueFromBlockWithId("key", blocks)));
+        return TableTransposition.stagingDecrypt(text, key);
+    }
 
+    private void checkBlocks(Map<String, ControlPanelBlock> blocks) {
+        DefaultBlocksChecker.checkBlocks(blocks, REQUIRED_BLOCKS);
+    }
 
-        // обработка блока (тут в основном проверки)
-        if (keyBlock.isEmpty())
-            // такой ситуации по идее быть не должно, так что это непредвиденная ошибка
-            throw new IllegalStateException();
-        block = keyBlock.get();
-        value = block.getValue();
-        if (StringUtils.isEmpty(value)) {
-            throw new LogicException("Не заполнен блок " + block.getName());
-        }
-        // обработка блока
+    private String getValueFromBlockWithId(String id, Map<String, ControlPanelBlock> blocks) {
+        return blocks.get(id).getValue();
     }
 }

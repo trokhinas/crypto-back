@@ -3,7 +3,7 @@ package vsu.labs.crypto.service.algs.encryption;
 import org.springframework.stereotype.Service;
 import vsu.labs.crypto.algs.common.BlocksResponse;
 import vsu.labs.crypto.algs.common.ControlPanelBlock;
-import vsu.labs.crypto.algs.morse.Morse;
+import vsu.labs.crypto.algs.encryption.rot13.Rot13;
 import vsu.labs.crypto.dto.crypto.PartitionAlgData;
 import vsu.labs.crypto.service.algs.common.DefaultBlocksChecker;
 import vsu.labs.crypto.utils.algs.BlockBuilder;
@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class MorseService {
-
+public class Rot13Service {
     private static final List<String> REQUIRED_BLOCKS = Collections.singletonList("text");
 
     public BlocksResponse getBlocks() {
@@ -22,31 +21,31 @@ public class MorseService {
                 .withBlock("text", "Текст")
                 .build();
 
-        return BlocksResponse.withEncode(blockMap);
+        return BlocksResponse.withEncrypt(blockMap);
     }
 
-    public String encode(Map<String, ControlPanelBlock> blocks) {
+    public String encrypt(Map<String, ControlPanelBlock> blocks) {
         checkBlocks(blocks);
         String text = getValueFromBlockWithId("text", blocks);
-        return Morse.code(text);
+        return Rot13.encrypt(text);
     }
 
-    public String decode(Map<String, ControlPanelBlock> blocks) {
+    public String decrypt(Map<String, ControlPanelBlock> blocks) {
         checkBlocks(blocks);
         String text = getValueFromBlockWithId("text", blocks);
-        return Morse.decode(text);
+        return Rot13.decrypt(text);
     }
 
-    public PartitionAlgData stagingEncode(Map<String, ControlPanelBlock> blocks) {
+    public PartitionAlgData stagingEncrypt(Map<String, ControlPanelBlock> blocks) {
         checkBlocks(blocks);
         String text = getValueFromBlockWithId("text", blocks);
-        return Morse.stagingCode(text);
+        return Rot13.stagingEncrypt(text);
     }
 
-    public PartitionAlgData stagingDecode(Map<String, ControlPanelBlock> blocks) {
+    public PartitionAlgData stagingDecrypt(Map<String, ControlPanelBlock> blocks) {
         checkBlocks(blocks);
         String text = getValueFromBlockWithId("text", blocks);
-        return Morse.stagingDecode(text);
+        return Rot13.stagingDerypt(text);
     }
 
     private void checkBlocks(Map<String, ControlPanelBlock> blocks) {

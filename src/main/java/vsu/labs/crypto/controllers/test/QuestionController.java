@@ -1,7 +1,8 @@
 package vsu.labs.crypto.controllers.test;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import vsu.labs.crypto.dto.test.QuestionDto;
@@ -10,16 +11,15 @@ import vsu.labs.crypto.service.test.QuestionService;
 
 import java.util.List;
 
-@RestController("/question")
+@RestController
+@RequestMapping("question")
+@AllArgsConstructor
 public class QuestionController {
-    private final QuestionService questionService;
-    @Autowired
-    public QuestionController(QuestionService questionService) {
-        this.questionService = questionService;
-    }
 
-    @GetMapping()
+    private final QuestionService questionService;
+
+    @GetMapping("all")
     public List<QuestionDto> allQuestionType(@RequestParam TaskType type){
-        return questionService.getAllQustionOfType(type);
+        return questionService.getAllQuestionByType(type);
     }
 }

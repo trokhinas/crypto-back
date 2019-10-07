@@ -6,14 +6,11 @@ import vsu.labs.crypto.config.IntegrationTest;
 import vsu.labs.crypto.enums.TaskType;
 
 public class QuestionServiceTest extends IntegrationTest {
-    private final QuestionService service;
     @Autowired
-    public QuestionServiceTest(QuestionService service) {
-        this.service = service;
-    }
+    private QuestionService service;
 
     @Test
     public void name() {
-        System.out.println(service.getAllQustionOfType(TaskType.SELECT));
+        System.out.println(service.getAllQuestionByType(TaskType.SELECT));
     }
 }

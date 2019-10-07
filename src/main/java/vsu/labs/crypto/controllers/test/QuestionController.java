@@ -20,6 +20,6 @@ public class QuestionController {
 
     @GetMapping()
     public List<QuestionDto> allQuestionType(@RequestParam TaskType type){
-        return questionService.getAllQustioOfType(type);
+        return questionService.getAllQustionOfType(type);
     }
 }

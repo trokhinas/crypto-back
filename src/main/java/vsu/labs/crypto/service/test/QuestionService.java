@@ -24,56 +24,68 @@ public class QuestionService {
     }
 
 
-    public List<QuestionDto> getAllQustioOfType(TaskType type) {
+    public List<QuestionDto> getAllQustionOfType(TaskType type) {
         List<QuestionEntity> allQuestion = questionRepository.findAll();
         List<QuestionEntity> result = new ArrayList<>();
         switch (type) {
             case SELECT: {
-                for (int i = 0; i < allQuestion.size(); i++) {
-                    QuestionEntity curQuestion = allQuestion.get(i);
-                    if (curQuestion.getAnswerList().size() <= 1) {
-                        continue;
-                    }
-                    boolean check = false;
-                    for (AnswerEntity answer : curQuestion.getAnswerList()) {
-                        if (answer.getIsCorrect()) {
-                            if (check) {
-                                check = false;
-                                break;
-                            } else
-                                check = true;
-                        }
-                    }
-                    if (check)
-                        result.add(curQuestion);
-                }
+                findSelectQuestion(allQuestion,result);
             }
             case MANUAL: {
-                for (int i = 0; i < allQuestion.size(); i++) {
-                    QuestionEntity curQuestion = allQuestion.get(i);
-                    if (curQuestion.getAnswerList().size() != 1) {
-                        break;
-                    } else
-                        result.add(curQuestion);
-                }
+                findManualQuestion(allQuestion,result);
             }
             case MULTISELECT: {
-                for (int i = 0; i < allQuestion.size(); i++) {
-                    QuestionEntity curQuestion = allQuestion.get(i);
-                    if (curQuestion.getAnswerList().size() <= 1) {
-                        continue;
-                    }
-                    int count = 0;
-                    for (AnswerEntity answer : curQuestion.getAnswerList()) {
-                        if (answer.getIsCorrect()) {
-                            count++;
-                        }
-                    }
-                    if (count > 1)
-                        result.add(curQuestion);
-                }
+                findMultiselectQuestion(allQuestion,result);
             }
         }
         return questionMapper.toDto(result);
+    }
+
+    private void findSelectQuestion(List<QuestionEntity> allQuestion, List<QuestionEntity> result) {
+        for (int i = 0; i < allQuestion.size(); i++) {
+            QuestionEntity curQuestion = allQuestion.get(i);
+            if (curQuestion.getAnswerList().size() <= 1) {
+                continue;
+            }
+            boolean check = false;
+            for (AnswerEntity answer : curQuestion.getAnswerList()) {
+                if (answer.getIsCorrect()) {
+                    if (check) {
+                        check = false;
+                        break;
+                    } else
+                        check = true;
+                }
+            }
+            if (check)
+                result.add(curQuestion);
+        }
+    }
+
+    private void findManualQuestion(List<QuestionEntity> allQuestion, List<QuestionEntity> result) {
+        for (int i = 0; i < allQuestion.size(); i++) {
+            QuestionEntity curQuestion = allQuestion.get(i);
+            if (curQuestion.getAnswerList().size() != 1) {
+                break;
+            } else
+                result.add(curQuestion);
+        }
+    }
+
+    private void findMultiselectQuestion(List<QuestionEntity> allQuestion, List<QuestionEntity> result) {
+        for (int i = 0; i < allQuestion.size(); i++) {
+            QuestionEntity curQuestion = allQuestion.get(i);
+            if (curQuestion.getAnswerList().size() <= 1) {
+                continue;
+            }
+            int count = 0;
+            for (AnswerEntity answer : curQuestion.getAnswerList()) {
+                if (answer.getIsCorrect()) {
+                    count++;
+                }
+            }
+            if (count > 1)
+                result.add(curQuestion);
+        }
     }
 }

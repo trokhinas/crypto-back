@@ -14,6 +14,6 @@ public class QuestionServiceTest extends IntegrationTest {
 
     @Test
     public void name() {
-        System.out.println(service.getAllQustioOfType(TaskType.SELECT));
+        System.out.println(service.getAllQustionOfType(TaskType.SELECT));
     }
 }

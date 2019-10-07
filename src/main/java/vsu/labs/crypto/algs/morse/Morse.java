@@ -84,7 +84,7 @@ public final class Morse {
                 for (int i = 0; i < english.length; i++) {
                     if (english[i] == symb) {
                         output += morse[i] + delimiter;
-                        stageData.add(counter, new StageData("" + (100.0 / message.toCharArray().length *counter), output));
+                        stageData.add(counter, new StageData("Зашифровано: " + (100.0 / message.toCharArray().length *counter)+"%", output));
                         counter++;
                     }
                 }
@@ -94,7 +94,7 @@ public final class Morse {
         }
 
         stageData.get(counter-1).setData((""+stageData.get(counter-1).getData()).trim());
-        stageData.get(counter - 1).setMessage(""+100);
+        stageData.get(counter - 1).setMessage("Зашифровано: "+100+ "%");
         return new PartitionAlgData(stageData, output.trim());
     }
 
@@ -114,20 +114,23 @@ public final class Morse {
                     }
                 }
             }
-            stageData.add(counter, new StageData("" + (100.0 / handleMessage.length * percent), output));
+            stageData.add(counter, new StageData("Расшифровано: " + (100.0 / handleMessage.length * percent+"%"), output));
             counter++;
             output += delimiter;
             stageData.get(counter-1).setData(stageData.get(counter-1).getData() + "  ");
         }
         stageData.get(counter-1).setData((""+stageData.get(counter-1).getData()).trim());
-        stageData.get(counter - 1).setMessage(""+100);
+        stageData.get(counter - 1).setMessage("Расшифровано: "+100+"%");
         return new PartitionAlgData(stageData, output.trim());
     }
 
     public static void main(String[] args) {
         System.out.println(Morse.code("hey i am tired").equals(".... . -.--  ..  .- --  - .. .-. . -.."));
+        System.out.println(code("hey i am not a gay"));
         System.out.println(Morse.decode(".... . -.--  ..  .- --  - .. .-. . -..").equals("hey i am tired"));
-        System.out.println(stagingDecode("....  ..  .-  -. --- -  .-  --. .- -.--").getStageData().get(stagingDecode("....  ..  .-  -. --- -  .-  --. .- -.--").getStageData().size()-1).getData());
+        System.out.println(stagingDecode(".... . -.--  ..  .- --  -. --- -  .-  --. .- -.--").getStageData().get(stagingDecode(".... . -.--  ..  .- --  -. --- -  .-  --. .- -.--").getStageData().size()-1).getData());
+        System.out.println(stagingCode("hey i am not a gay").getStageData().get(stagingCode("hey i am not a gay").getStageData().size()-1));
+        System.out.println(stagingDecode(".... . -.--  ..  .- --  - .. .-. . -.."));
     }
 
 }

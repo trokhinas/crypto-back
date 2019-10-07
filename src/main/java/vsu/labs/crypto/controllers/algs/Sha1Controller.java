@@ -13,6 +13,6 @@ import vsu.labs.crypto.dto.crypto.PartitionAlgData;
 public class Sha1Controller {
     @GetMapping
     public PartitionAlgData getHash(@RequestBody Sha1Request sha1Request){
-        return Sha1.sha1(sha1Request.getText());
+        return Sha1.stagingHash(sha1Request.getText());
     }
 }

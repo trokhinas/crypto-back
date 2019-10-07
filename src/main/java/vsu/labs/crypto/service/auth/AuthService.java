@@ -40,6 +40,6 @@ public class AuthService {
 
     // TODO реализовать функцию получению хэша от пароля
     private String getHash(String password) {
-        return Sha1.sha1(password);
+        return Sha1.hash(password);
     }
 }

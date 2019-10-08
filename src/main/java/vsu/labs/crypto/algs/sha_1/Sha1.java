@@ -3,7 +3,7 @@ package vsu.labs.crypto.algs.sha_1;
 import vsu.labs.crypto.dto.crypto.PartitionAlgData;
 import vsu.labs.crypto.dto.crypto.StageData;
 
-import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -33,13 +33,14 @@ public class Sha1 {
     "Текущие a,b,c,d,e прибавляются к исходным A,B,C,D,E соответственно.Начинается аналогичная обработка следующего набора слов",
     "Получение итогового сообщения объединением пяти 32-битных слов в одно 160-битное сообщение"
     };
-    public static PartitionAlgData sha1(String input) {
-        String sha1 = null;
+    public static PartitionAlgData stagingHash(String input) {
+        String sha1;
         try {
             MessageDigest msdDigest = MessageDigest.getInstance("SHA-1");
-            msdDigest.update(input.getBytes("UTF-8"), 0, input.length());
+            msdDigest.update(input.getBytes(StandardCharsets.UTF_8), 0, input.length());
             sha1 = DatatypeConverter.printHexBinary(msdDigest.digest());
-        } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException();
         }
         List<StageData> allStages = new ArrayList<>();
         for (int i = 0; i< stages.length;i++){
@@ -47,6 +48,18 @@ public class Sha1 {
         }
 
         return new PartitionAlgData(allStages,sha1);
+    }
+
+    public static String hash(String input) {
+        String sha1;
+        try {
+            MessageDigest msdDigest = MessageDigest.getInstance("SHA-1");
+            msdDigest.update(input.getBytes(StandardCharsets.UTF_8), 0, input.length());
+            sha1 = DatatypeConverter.printHexBinary(msdDigest.digest());
+            return sha1;
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException();
+        }
     }
 
 }

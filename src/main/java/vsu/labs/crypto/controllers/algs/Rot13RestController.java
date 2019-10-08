@@ -1,34 +1,44 @@
 package vsu.labs.crypto.controllers.algs;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import vsu.labs.crypto.algs.encryption.rot13.Rot13;
-import vsu.labs.crypto.dto.algs.Rot13Request;
+
+import vsu.labs.crypto.controllers.algs.abstr.AbstractAlgController;
+import vsu.labs.crypto.dto.algs.AlgBlockRequest;
 import vsu.labs.crypto.dto.response.Response;
+import vsu.labs.crypto.service.algs.encryption.Rot13Service;
 
 @RestController
 @RequestMapping("rot-13")
-public class Rot13RestController {
-    private static final Logger log = LoggerFactory.getLogger(Rot13RestController.class);
+@AllArgsConstructor @Slf4j
+public class Rot13RestController extends AbstractAlgController {
+
+    private final Rot13Service rot13Service;
 
     @PostMapping("encrypt")
-    public Response encrypt(@RequestBody Rot13Request request,
+    public Response encrypt(@RequestBody AlgBlockRequest request,
                             @RequestParam(required = false) boolean isStaging) {
         log.info("call encrypt ROT-13 with request = {}, isStaging = {}", request, isStaging);
 
         if (isStaging)
-            return Response.success(Rot13.stagingEncrypt(request.getText()));
-        return Response.success(Rot13.encrypt(request.getText()));
+            return Response.success(rot13Service.stagingEncrypt(request.getBlocks()));
+        return Response.success(rot13Service.encrypt(request.getBlocks()));
     }
 
     @PostMapping("decrypt")
-    public Response decrypt(@RequestBody Rot13Request request,
+    public Response decrypt(@RequestBody AlgBlockRequest request,
                             @RequestParam(required = false) boolean isStaging) {
         log.info("call decrypt ROT-13 with request = {}, isStaging = {}", request, isStaging);
 
         if (isStaging)
-            return Response.success(Rot13.stagingDerypt(request.getText()));
-        return Response.success(Rot13.decrypt(request.getText()));
+            return Response.success(rot13Service.stagingDecrypt(request.getBlocks()));
+        return Response.success(rot13Service.decrypt(request.getBlocks()));
+    }
+
+    @GetMapping("blocks")
+    public Response getBlocks() {
+        log.info("call get blocks");
+        return Response.success(rot13Service.getBlocks());
     }
 }

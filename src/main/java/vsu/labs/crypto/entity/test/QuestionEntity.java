@@ -2,7 +2,6 @@ package vsu.labs.crypto.entity.test;
 
 import lombok.Data;
 import lombok.ToString;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -29,6 +28,5 @@ public class QuestionEntity {
 
     @OneToMany(mappedBy = "question")
     private List<TaskEntity> taskList;
-
 
 }

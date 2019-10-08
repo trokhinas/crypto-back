@@ -38,7 +38,8 @@ create table mark
 	test_id integer
 		constraint mark_test_id_fk
 			references test,
-	mark integer
+	correct_answer integer,
+	all_question integer
 )
 ;
 

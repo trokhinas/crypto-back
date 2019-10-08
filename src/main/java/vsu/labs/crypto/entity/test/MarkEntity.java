@@ -15,8 +15,15 @@ public class MarkEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "mark")
-    private Integer mark;
+    @Column(name = "correct_answer")
+    private int correctAnswer;
 
+    @Column(name = "all_question")
+    private int all_question;
 
+    @Column(name = "user_id")
+    private int userId;
+
+    @Column(name = "test_id")
+    private int testId;
 }

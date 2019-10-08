@@ -9,5 +9,5 @@ import java.util.List;
 @Data
 public class TestDto {
     private Long testId;
-    private List<TaskEntity> tasks;
+    private List<TaskDto> tasks;
 }

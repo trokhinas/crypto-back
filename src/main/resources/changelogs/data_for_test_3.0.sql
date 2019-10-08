@@ -1,9 +1,9 @@
-INSERT INTO test (id, title)
-VALUES (1, 'Вариант 1'),
-      (2, 'Вариант 2'),
-      (3, 'Вариант 3'),
-      (4, 'Вариант 4'),
-      (5, 'Вариант 5');
+INSERT INTO test ( title)
+VALUES ('Вариант 1'),
+      ( 'Вариант 2'),
+      ( 'Вариант 3'),
+      ( 'Вариант 4'),
+      ( 'Вариант 5');
 
 INSERT INTO task_type (id, title, type)
 VALUES (700, 'Ручной ввод в поле ответа', 'MANUAL_INPUT'),

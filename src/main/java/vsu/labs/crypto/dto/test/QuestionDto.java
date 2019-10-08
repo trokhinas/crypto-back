@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 public class QuestionDto {
     private Long questionId;
-    private String text;
-    private List<AnswerEntity> answers;
+    private String name;
+    private List<AnswerDto> answers;
 }

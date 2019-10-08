@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import vsu.labs.crypto.dto.test.QuestionDto;
+import vsu.labs.crypto.entity.test.QuestionEntity;
+import vsu.labs.crypto.enums.RoleType;
 import vsu.labs.crypto.enums.TaskType;
 import vsu.labs.crypto.service.test.QuestionService;
 
@@ -19,7 +21,7 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("all")
-    public List<QuestionDto> allQuestionType(@RequestParam TaskType type){
-        return questionService.getAllQuestionByType(type);
+    public List<QuestionEntity> allQuestionType(){
+        return questionService.getAllQuestionByType(TaskType.SELECT);
     }
 }

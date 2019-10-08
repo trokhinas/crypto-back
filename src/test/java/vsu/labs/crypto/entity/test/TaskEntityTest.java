@@ -36,7 +36,6 @@ public class TaskEntityTest extends IntegrationTest {
         AnswerEntity answerEntity = new AnswerEntity();
         answerEntity.setName("firstOfFirstOfFirstOfFirst");
         answerEntity.setIsCorrect(true);
-        answerEntity.setQuestion(savedQuestion);
         AnswerEntity savedAnswer = answerRepository.save(answerEntity);
 
         answerRepository.delete(savedAnswer);

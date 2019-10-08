@@ -23,7 +23,6 @@ public class UserDto {
 
     private long roleId;
 
-    private List<CourseEntity> courses;
 
     private List<LectureEntity> lectures;
 }

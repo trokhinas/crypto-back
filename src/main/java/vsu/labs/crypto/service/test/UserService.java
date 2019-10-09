@@ -53,10 +53,12 @@ public class UserService {
         List<UserTestDto> userTestDtos = new ArrayList<>();
         for (int i = 0; i < markEntitiesOfUser.size(); i++){
             UserTestDto userTestDto = new UserTestDto();
-            int idL =  markEntitiesOfUser.get(i).getTestId();
-            userTestDto.setTestId(idL);
-            userTestDto.setAllQuestion(markEntitiesOfUser.get(i).getAll_question());
-            userTestDto.setCorrectAnswer(markEntitiesOfUser.get(i).getCorrectAnswer());
+            Integer idL =  markEntitiesOfUser.get(i).getTestId();
+            TestEntity testEntity = testRepository.findById((long) idL).get();
+            userTestDto.setId(idL);
+            userTestDto.setTitle(testEntity.getTitle());
+            String mark = markEntitiesOfUser.get(i).getCorrectAnswer()+"/"+markEntitiesOfUser.get(i).getAll_question();
+            userTestDto.setMark(mark);
             userTestDtos.add(userTestDto);
         }
         return userTestDtos;

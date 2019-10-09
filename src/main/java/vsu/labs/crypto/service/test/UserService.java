@@ -53,9 +53,8 @@ public class UserService {
         List<UserTestDto> userTestDtos = new ArrayList<>();
         for (int i = 0; i < markEntitiesOfUser.size(); i++){
             UserTestDto userTestDto = new UserTestDto();
-            Long idL = (long) markEntitiesOfUser.get(i).getTestId();
-            TestEntity testEntity = testRepository.findById(idL).get();
-            userTestDto.setTest(testMapper.toDto(testEntity));
+            int idL =  markEntitiesOfUser.get(i).getTestId();
+            userTestDto.setTestId(idL);
             userTestDto.setAllQuestion(markEntitiesOfUser.get(i).getAll_question());
             userTestDto.setCorrectAnswer(markEntitiesOfUser.get(i).getCorrectAnswer());
             userTestDtos.add(userTestDto);

@@ -5,6 +5,7 @@ import vsu.labs.crypto.algs.encryption.transposition.functions.TableStepper;
 import vsu.labs.crypto.algs.encryption.transposition.utils.OrderedColumnsListBuilder;
 import vsu.labs.crypto.algs.encryption.transposition.utils.StringWithCounter;
 import vsu.labs.crypto.exceptions.LogicException;
+import vsu.labs.crypto.exceptions.algs.encryption.transposition.TooLongKeyException;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -20,7 +21,6 @@ final class Table {
     private final List<Integer> orderedColumnsList;
 
     private static final String EMPTY_CELL = "";
-    static final String SPACING_SYMBOL = "_";
 
     private Table(BigInteger size, BigInteger key) {
         this.size = size.intValue();
@@ -35,6 +35,8 @@ final class Table {
     static Table withSize(BigInteger size, BigInteger key) {
         if (key.toString().length() < 2)
             throw new LogicException("Ключ должен содержать как минимум 2 цифры!");
+        if (key.toString().length() > 10)
+            throw new TooLongKeyException();
         return new Table(size, key);
     }
 
@@ -69,13 +71,13 @@ final class Table {
     }
 
     private void inputLeftToRight(String message) {
-        TableAction inputAction = createLeftToRightInputAction(message);
+        TableAction inputAction = createInputAction(message);
         leftToRightStepper.run(table, inputAction);
     }
 
     private void inputUpToDown(String message) {
         TableStepper stepper = createColumnUpToDownStepper();
-        TableAction inputAction = createUpToDownInputAction(message);
+        TableAction inputAction = createInputAction(message);
 
         stepper.run(table, inputAction);
     }
@@ -96,15 +98,7 @@ final class Table {
         return sb.toString();
     }
 
-    private TableAction createLeftToRightInputAction(String message) {
-        StringWithCounter stringWithCounter = StringWithCounter.withString(message);
-        return (table, rowIndex, columnIndex) -> {
-            if (!isDisabledCell(rowIndex, columnIndex))
-                table[rowIndex][columnIndex] += stringWithCounter.getOne();
-        };
-    }
-
-    private TableAction createUpToDownInputAction(String message) {
+    private TableAction createInputAction(String message) {
         StringWithCounter stringWithCounter = StringWithCounter.withString(message);
         return (table, rowIndex, columnIndex) -> {
             if (!isDisabledCell(rowIndex, columnIndex))

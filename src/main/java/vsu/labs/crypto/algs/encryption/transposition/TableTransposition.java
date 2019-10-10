@@ -34,7 +34,8 @@ public final class TableTransposition {
 
         List<StageData> stageData = Arrays.asList(
                 StageData.message("Создана таблица размера " + table.getSize()),
-                StageData.withData("В неё слева направо, сверху вниз вписыывается сообщение", source),
+                StageData.withData("В неё слева направо, сверху вниз вписывается сообщение", source),
+                StageData.message("С помощью ключа " + key.toString() + " определяется порядок считывания столбцов"),
                 StageData.withData("Из нее считывается сообщение сверху вниз, слева направо", result)
         );
         return new PartitionAlgData(stageData, result);
@@ -47,7 +48,8 @@ public final class TableTransposition {
 
         List<StageData> stageData = Arrays.asList(
                 StageData.message("Создана таблица размера " + table.getSize()),
-                StageData.withData("В неё сверху вниз, слева направо вписыывается сообщение", source),
+                StageData.withData("В неё сверху вниз, слева направо вписывается сообщение", source),
+                StageData.message("С помощью ключа " + key.toString() + " определяется порядок записи столбцов"),
                 StageData.withData("Из нее считывается сообщение слева направо, сверху вниз", result)
         );
         return new PartitionAlgData(stageData, result);

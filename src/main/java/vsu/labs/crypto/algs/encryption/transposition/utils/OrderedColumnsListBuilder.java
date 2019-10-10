@@ -2,6 +2,7 @@ package vsu.labs.crypto.algs.encryption.transposition.utils;
 
 import vsu.labs.crypto.exceptions.algs.encryption.transposition.DuplicateColumnException;
 import vsu.labs.crypto.exceptions.algs.encryption.transposition.MissedColumnException;
+import vsu.labs.crypto.exceptions.algs.encryption.transposition.NoZeroInKeyException;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 public final class OrderedColumnsListBuilder {
+    private static final String ZERO = "0";
+
     private OrderedColumnsListBuilder() { }
 
     public static List<Integer> buildList(BigInteger key) {
@@ -25,6 +28,9 @@ public final class OrderedColumnsListBuilder {
     }
 
     private static void checkKey(String key) {
+        if (key.contains(ZERO))
+            throw new NoZeroInKeyException();
+
         for (int i = 1; i <= key.length() ; i++) {
             String strValue = String.valueOf(i);
             int first = key.indexOf(strValue);

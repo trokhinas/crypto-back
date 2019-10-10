@@ -51,17 +51,35 @@ public class UserService {
     public List<UserTestDto> findAllMarkForTest(Long id) {
         List<MarkEntity> markEntitiesOfUser = markRepository.findByUserId(Math.toIntExact(id));
         List<UserTestDto> userTestDtos = new ArrayList<>();
-        for (int i = 0; i < markEntitiesOfUser.size(); i++){
+        List<Integer> idTestOfUser = new ArrayList<>();
+        for (int i = 0; i < markEntitiesOfUser.size(); i++) {
             UserTestDto userTestDto = new UserTestDto();
-            Integer idL =  markEntitiesOfUser.get(i).getTestId();
+            Integer idL = markEntitiesOfUser.get(i).getTestId();
+            idTestOfUser.add(idL);
             TestEntity testEntity = testRepository.findById((long) idL).get();
             userTestDto.setId(idL);
             userTestDto.setTitle(testEntity.getTitle());
-            String mark = markEntitiesOfUser.get(i).getCorrectAnswer()+"/"+markEntitiesOfUser.get(i).getAll_question();
+            String mark = markEntitiesOfUser.get(i).getCorrectAnswer() + "/" + markEntitiesOfUser.get(i).getAll_question();
             userTestDto.setMark(mark);
             userTestDtos.add(userTestDto);
         }
-        return userTestDtos;
+        List<TestEntity> allTest = testRepository.findAll();
+        for (TestEntity test : allTest){
+            boolean check = true;
+            for (int idTest: idTestOfUser){
+                if (test.getId()==idTest){
+                    check = false;
+                }
+            }
+            if (check){
+                UserTestDto userTest = new UserTestDto();
+                userTest.setId(Math.toIntExact(test.getId()));
+                userTest.setTitle(test.getTitle());
+                userTest.setMark("N/A");
+                userTestDtos.add(userTest);
+            }
+        }
+            return userTestDtos;
     }
 
 }

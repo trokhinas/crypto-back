@@ -1,19 +1,17 @@
 package vsu.labs.crypto.controllers.test;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import vsu.labs.crypto.dto.test.UserDto;
-import vsu.labs.crypto.dto.test.UserTestDto;
 import vsu.labs.crypto.service.test.UserService;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("user")
 @AllArgsConstructor
 public class UserRestController {
     private final UserService userService;
+
     @PostMapping()
     public boolean addUser(@RequestBody UserDto userDto) {
         return userService.addUser(userDto);
@@ -27,10 +25,5 @@ public class UserRestController {
     @DeleteMapping()
     public void deleteUser(@RequestBody UserDto userDto) {
         userService.deleteUser(userDto);
-    }
-
-    @GetMapping("/init/{id}")
-    public List<UserTestDto> initUserMark(@PathVariable("id") Long id){
-        return userService.findAllMarkForTest(id);
     }
 }

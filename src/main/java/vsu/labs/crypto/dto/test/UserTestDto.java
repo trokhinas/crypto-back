@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class UserTestDto {
-    private Integer id;
+    private Long id;
     private String title;
     private String mark;
 }

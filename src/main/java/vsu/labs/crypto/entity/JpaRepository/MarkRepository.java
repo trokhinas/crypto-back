@@ -6,5 +6,6 @@ import vsu.labs.crypto.entity.test.MarkEntity;
 import java.util.List;
 
 public interface MarkRepository extends JpaRepository<MarkEntity,Long> {
-    public List<MarkEntity> findByUserId(int id);
+
+    List<MarkEntity> findByUserId(Long id);
 }

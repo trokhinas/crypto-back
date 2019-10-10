@@ -22,8 +22,8 @@ public class MarkEntity {
     private int all_question;
 
     @Column(name = "user_id")
-    private int userId;
+    private Long userId;
 
     @Column(name = "test_id")
-    private int testId;
+    private Long testId;
 }

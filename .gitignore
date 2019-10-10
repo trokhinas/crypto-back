@@ -29,3 +29,6 @@ build/
 
 ### VS Code ###
 .vscode/
+#Нафиг проперти и пусть об этом никто не узнает#
+.gitignore
+.properties

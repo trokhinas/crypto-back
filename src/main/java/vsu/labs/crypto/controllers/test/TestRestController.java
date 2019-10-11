@@ -1,9 +1,7 @@
 package vsu.labs.crypto.controllers.test;
 
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import vsu.labs.crypto.dto.response.Response;
 import vsu.labs.crypto.dto.test.TestDto;
@@ -11,10 +9,8 @@ import vsu.labs.crypto.service.test.TestService;
 
 @RestController
 @RequestMapping("tests")
-@AllArgsConstructor
+@AllArgsConstructor @Slf4j
 public class TestRestController {
-    private static final Logger log = LoggerFactory.getLogger(TestRestController.class);
-    @Autowired
     private final TestService testService;
 
     @PostMapping("check")
@@ -23,14 +19,10 @@ public class TestRestController {
         return Response.success();
     }
 
-    @GetMapping("hello")
-    public String hello() {
-        return "hello";
-    }
-
-    @GetMapping("helloResponse")
-    public Response helloResponse() {
-        return Response.success("hello");
+    @GetMapping("all")
+    public Response getAll() {
+        log.info("call getAll");
+        return Response.success(testService.getAll());
     }
 
     @PostMapping("addTest")

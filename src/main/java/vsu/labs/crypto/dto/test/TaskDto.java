@@ -7,5 +7,5 @@ import vsu.labs.crypto.enums.TaskType;
 public class TaskDto {
     private Long taskId;
     private TaskType type;
-    private QuestionDto questions;
+    private QuestionDto question;
 }

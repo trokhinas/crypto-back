@@ -75,7 +75,7 @@ public class QuestionService {
             System.out.println(x.getName());
         List<QuestionDto> resultDto = questionMapper.toDto(result);
         for (QuestionDto x : resultDto)
-            System.out.println(x.getName());
+            System.out.println(x.getText());
         return result;
 
     }

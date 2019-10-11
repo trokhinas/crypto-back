@@ -24,6 +24,12 @@ public class TestRestController {
         log.info("call getAll");
         return Response.success(testService.getAll());
     }
+    @GetMapping()
+    public Response getById(@RequestParam Long id) {
+        log.info("call getById");
+        return Response.success(testService.getById(id));
+    }
+
 
     @PostMapping("addTest")
     public boolean addTest(@RequestBody TestDto test){

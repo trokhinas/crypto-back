@@ -26,4 +26,8 @@ public class TestService {
         List<TestEntity> testEntities = testRepository.findAll();
         return testMapper.toDto(testEntities);
     }
+    public TestDto getById(Long id){
+        TestEntity testEntity = testRepository.findById(id).get();
+        return testMapper.toDto(testEntity);
+    }
 }

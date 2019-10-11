@@ -6,7 +6,7 @@ VALUES ('Вариант 1'),
       ( 'Вариант 5');
 
 INSERT INTO task_type (id, title, type)
-VALUES (700, 'Ручной ввод в поле ответа', 'MANUAL_INPUT'),
+VALUES (700, 'Ручной ввод в поле ответа', 'MANUAL'),
      (600, 'Ответ с множественным выбором', 'MULTISELECT'),
      (500, 'Выбор единственного ответа', 'SELECT');
 

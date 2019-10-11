@@ -50,6 +50,26 @@ final class Table {
         return readLeftToRight();
     }
 
+    String getColumn(int index) {
+        StringBuilder sb = new StringBuilder();
+        TableAction readAction = (table, rowIndex, columnIndex) -> {
+            if (columnIndex == index && !isDisabledCell(rowIndex, columnIndex))
+                sb.append(table[rowIndex][columnIndex]);
+        };
+        leftToRightStepper.run(table, readAction);
+        return sb.toString();
+    }
+
+    String getRow(int index) {
+        StringBuilder sb = new StringBuilder();
+        TableAction readAction = (table, rowIndex, columnIndex) -> {
+            if (rowIndex == index && !isDisabledCell(rowIndex, columnIndex))
+                sb.append(table[rowIndex][columnIndex]);
+        };
+        leftToRightStepper.run(table, readAction);
+        return sb.toString();
+    }
+
     void clear() {
         for (String[] row : table) {
             for (int i = 0; i < row.length; i++) {

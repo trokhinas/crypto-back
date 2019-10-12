@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.ToString;
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -20,10 +21,7 @@ public class QuestionEntity {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinTable(name = "answer",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "question_id"))
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "question")
     private List<AnswerEntity> answerList;
 
     @OneToMany(mappedBy = "question")

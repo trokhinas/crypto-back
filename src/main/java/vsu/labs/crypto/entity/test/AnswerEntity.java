@@ -18,11 +18,13 @@ public class AnswerEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "question_id")
-    private Integer questionId;
     @Basic
     @Column(name = "is_correct")
     private Boolean isCorrect;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
+    private QuestionEntity question;
 
 
 }

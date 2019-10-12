@@ -17,22 +17,20 @@ import java.util.List;
 @AllArgsConstructor
 public class QuestionService {
     private final QuestionRepository questionRepository;
-    private final AnswerRepository answerRepository;
     private final QuestionMapper questionMapper;
 
-    public List<QuestionEntity> getAllQuestionByType(TaskType type) {
+    public List<QuestionDto> getAllQuestionByType(TaskType type) {
         List<QuestionEntity> allQuestion = questionRepository.findAll();
         List<QuestionEntity> result = new ArrayList<>();
         switch (type) {
             case SELECT: {
                 for (int i = 0; i < allQuestion.size(); i++) {
                     QuestionEntity curQuestion = allQuestion.get(i);
-                    List<AnswerEntity> currentAnswerList = answerRepository.findByQuestionId(Math.toIntExact(curQuestion.getId()));
-                    if (currentAnswerList.size() <= 1) {
+                    if (curQuestion.getAnswerList().size() <= 1) {
                         continue;
                     }
                     boolean check = false;
-                    for (AnswerEntity answer : currentAnswerList) {
+                    for (AnswerEntity answer : curQuestion.getAnswerList()) {
                         if (answer.getIsCorrect()) {
                             if (check) {
                                 check = false;
@@ -48,8 +46,9 @@ public class QuestionService {
             case MANUAL: {
                 for (int i = 0; i < allQuestion.size(); i++) {
                     QuestionEntity curQuestion = allQuestion.get(i);
-                    if (curQuestion.getAnswerList().size() != 1) {
-                        break;
+                    List<AnswerEntity> answerEntities = curQuestion.getAnswerList();
+                    if (answerEntities.size() != 1) {
+                        continue;
                     } else
                         result.add(curQuestion);
                 }
@@ -71,12 +70,7 @@ public class QuestionService {
                 }
             }
         }
-        for (QuestionEntity x : result)
-            System.out.println(x.getName());
-        List<QuestionDto> resultDto = questionMapper.toDto(result);
-        for (QuestionDto x : resultDto)
-            System.out.println(x.getText());
-        return result;
+        return questionMapper.toDto(result);
 
     }
 }

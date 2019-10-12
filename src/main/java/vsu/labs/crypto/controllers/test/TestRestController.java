@@ -9,7 +9,8 @@ import vsu.labs.crypto.service.test.TestService;
 
 @RestController
 @RequestMapping("tests")
-@AllArgsConstructor @Slf4j
+@AllArgsConstructor
+@Slf4j
 public class TestRestController {
     private final TestService testService;
 
@@ -24,6 +25,7 @@ public class TestRestController {
         log.info("call getAll");
         return Response.success(testService.getAll());
     }
+
     @GetMapping()
     public Response getById(@RequestParam Long id) {
         log.info("call getById");
@@ -32,7 +34,7 @@ public class TestRestController {
 
 
     @PostMapping("addTest")
-    public boolean addTest(@RequestBody TestDto test){
+    public boolean addTest(@RequestBody TestDto test) {
         return testService.addTest(test);
     }
 }

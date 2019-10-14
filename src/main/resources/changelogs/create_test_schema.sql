@@ -3,23 +3,15 @@ create table if not exists test
   id bigserial not null
     constraint task_pkey
     primary key,
-  title varchar(50)
+  title varchar(100)
 )
 ;
-
-
-create table if not exists task
+CREATE TABLE public.task_type
 (
-  id bigserial not null
-    constraint task_pkey1
-    primary key,
-  type varchar(100),
-  name varchar(100),
-  test_id integer
-    constraint task_test_id_fk
-    references test
-)
-;
+    id bigserial PRIMARY KEY,
+    title varchar(255),
+    type varchar(100)
+);
 
 
 create table if not exists question
@@ -27,12 +19,31 @@ create table if not exists question
   id bigserial not null
     constraint question_pk
     primary key,
-  name varchar(100),
-  task_id integer
-    constraint question_task_id_fk
-    references task
+  name varchar(500)
 )
 ;
+
+create table task
+(
+	id bigserial not null
+		constraint task_pkey1
+			primary key,
+	type_id integer
+		constraint task_task_type_id_fk
+			references task_type,
+	question_id integer
+		constraint task_question_id_fk
+			references question,
+	test_id integer
+		constraint task_test_id_fk
+			references test
+)
+;
+
+
+
+
+
 
 create table if not exists answer
 (
@@ -42,7 +53,7 @@ create table if not exists answer
   question_id integer
     constraint answer_question_id_fk
     references question,
-  name varchar(100),
+  name varchar(500),
   is_correct boolean
 )
 ;

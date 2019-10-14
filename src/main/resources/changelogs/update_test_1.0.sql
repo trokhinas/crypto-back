@@ -7,7 +7,7 @@ create table role
 )
 ;
 
-create table "user"
+create table "users"
 (
 	id bigserial not null
 		constraint user_pkey
@@ -24,21 +24,22 @@ create table "user"
 
 
 create unique index user_login_uindex
-	on "user" (login)
+	on "users" (login)
 ;
 
 create table mark
 (
-	id integer not null
+	id bigserial not null
 		constraint mark_pkey
 			primary key,
 	user_id integer
 		constraint mark_user_id_fk
-			references "user",
+			references "users",
 	test_id integer
 		constraint mark_test_id_fk
 			references test,
-	mark integer
+	correct_answer integer,
+	all_question integer
 )
 ;
 

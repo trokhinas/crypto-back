@@ -9,9 +9,7 @@ import java.util.Random;
 
 public final class RSA {
 
-
     private RSA() {}
-
 
     /**
      * Метод генерирует ключи c помощью простых чисел, заданной длины
@@ -36,7 +34,6 @@ public final class RSA {
         return result;
     }
 
-
     /**
      * Генерация сообщения с ЭЦП
      * @param privateKey закрытый ключ d
@@ -45,22 +42,13 @@ public final class RSA {
      * @return сообщение с ЭЦП(пара - (text, sign))
      */
     public static String[] genMessageWithSign(BigInteger privateKey, BigInteger n, String text) {
-        BigInteger sha1 = BigInteger.ZERO;
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            digest.reset();
-            digest.update(text.getBytes("utf8"));
-            sha1 = new BigInteger(1, digest.digest());
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        BigInteger sign = sha1.modPow(privateKey, n);
+        BigInteger hash = getHash(text);
+        BigInteger sign = hash.modPow(privateKey, n);
         String[] message = new String[2];
         message[0] = text;
         message[1] = sign.toString(16);
         return message;
     }
-
 
     /**
      * Метод для проверки корректности ЭЦП
@@ -71,18 +59,9 @@ public final class RSA {
     public static boolean checkSign(BigInteger[] publicKey, String[] message) {
         BigInteger signToProve = new BigInteger(message[1], 16);
         BigInteger hash = signToProve.modPow(publicKey[0], publicKey[1]);
-        BigInteger messageHash = BigInteger.ZERO;
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            digest.reset();
-            digest.update(message[0].getBytes("utf8"));
-            messageHash = new BigInteger(1, digest.digest());
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        BigInteger messageHash = getHash(message[0]);
         return hash.equals(messageHash);
     }
-
 
     /**
      * Генерирует закрытый ключ d с заданными e и phi, соответствующий формуле ed = 1 mod phi
@@ -91,7 +70,6 @@ public final class RSA {
     private static BigInteger genPrivateKey(BigInteger e, BigInteger phi) {
         return xgcd(e, phi)[1];
     }
-
 
     /**
      * Расширенный алгоритм Евклида для нахождения коэффициентов, при которых достигается a*k1 + b*k2 = gcd(a,b)
@@ -125,6 +103,22 @@ public final class RSA {
                 return result;
             }
         }
+    }
+
+    /**
+     * Генерация хеша строки с использованием sha-1
+     */
+    private static BigInteger getHash(String text) {
+        BigInteger hash = BigInteger.ZERO;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            digest.reset();
+            digest.update(text.getBytes("utf8"));
+            hash = new BigInteger(1, digest.digest());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return hash;
     }
 }
 

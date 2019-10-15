@@ -1,11 +1,16 @@
 package vsu.labs.crypto.algs.digSignature.RSA;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.springframework.data.util.Pair;
 import vsu.labs.crypto.utils.math.PrimesGenerator;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Random;
 
+import static vsu.labs.crypto.utils.math.MathConstants.ONE;
 
 public final class RSA {
 
@@ -14,52 +19,52 @@ public final class RSA {
     /**
      * Метод генерирует ключи c помощью простых чисел, заданной длины
      * @param bits Длина простых чисел, с помощью которых генерируются ключи
-     * @return Тройка чисел, где первое - e, второе - n, третье - d(пара (e,n) - открытый ключ, d - закрытый ключ)
+     * @return Пара ключей, где пара (e,n) - открытый ключ, d - закрытый ключ
      */
-    public static BigInteger[] genKeys(int bits){
-        if (bits < 81)
-            throw new IllegalArgumentException("Keys length must be greater than 80");
-        BigInteger[] result = new BigInteger[3];
+    public static Pair<OpenKey, SecretKey> genKeys(int bits) {
+        checkBitLength(bits);
         Random rand = new Random();
-        BigInteger int1 = BigInteger.valueOf(1);
+
         BigInteger p = PrimesGenerator.getPrime(bits);
         BigInteger q = PrimesGenerator.getPrime(bits);
-        result[1] = p.multiply(q);
-        BigInteger phi = p.subtract(int1).multiply(q.subtract(BigInteger.valueOf(1)));
-        result[0] = new BigInteger(bits - 1, rand);
-        while (!phi.gcd(result[0]).equals(int1))
-            result[0] = new BigInteger(bits - 1, rand);
-        result[2] = genPrivateKey(result[0], phi);
-        result[2] = result[2].add(phi).mod(phi);
-        return result;
+        BigInteger openN = p.multiply(q);
+        BigInteger phi = p.subtract(ONE).multiply(q.subtract(ONE));
+
+        BigInteger openE = new BigInteger(bits - 1, rand);
+        while (!phi.gcd(openE).equals(ONE))
+            openE = new BigInteger(bits - 1, rand);
+        BigInteger secretD = genPrivateKey(openE, phi).add(phi).mod(phi);
+
+        return Pair.of(
+                new OpenKey(openE, openN),
+                new SecretKey(secretD)
+        );
     }
 
     /**
      * Генерация сообщения с ЭЦП
-     * @param privateKey закрытый ключ d
-     * @param n произведение простых чисел p и q
+     * @param secretKey закрытый ключ d
+     * @param n часть открытого ключа
      * @param text текст для формирование подписи
      * @return сообщение с ЭЦП(пара - (text, sign))
      */
-    public static String[] genMessageWithSign(BigInteger privateKey, BigInteger n, String text) {
+    public static Message genMessageWithSign(SecretKey secretKey, BigInteger n, String text) {
         BigInteger hash = getHash(text);
-        BigInteger sign = hash.modPow(privateKey, n);
-        String[] message = new String[2];
-        message[0] = text;
-        message[1] = sign.toString(16);
-        return message;
+        BigInteger sign = hash.modPow(secretKey.d, n);
+
+        return new Message(text, sign.toString(16));
     }
 
     /**
      * Метод для проверки корректности ЭЦП
-     * @param publicKey открытый ключ(пара - (e, n))
+     * @param openKey открытый ключ(пара - (e, n))
      * @param message сообщение c ЭЦП для проверки корректности(пара - (text, sign))
      * @return является ли подпись корректной
      */
-    public static boolean checkSign(BigInteger[] publicKey, String[] message) {
-        BigInteger signToProve = new BigInteger(message[1], 16);
-        BigInteger hash = signToProve.modPow(publicKey[0], publicKey[1]);
-        BigInteger messageHash = getHash(message[0]);
+    public static boolean checkSign(OpenKey openKey, Message message) {
+        BigInteger signToProve = new BigInteger(message.sign, 16);
+        BigInteger hash = signToProve.modPow(openKey.e, openKey.n);
+        BigInteger messageHash = getHash(message.text);
         return hash.equals(messageHash);
     }
 
@@ -68,14 +73,14 @@ public final class RSA {
      * @return Значение закрытого ключа d
      */
     private static BigInteger genPrivateKey(BigInteger e, BigInteger phi) {
-        return xgcd(e, phi)[1];
+        return extendGcd(e, phi)[1];
     }
 
     /**
      * Расширенный алгоритм Евклида для нахождения коэффициентов, при которых достигается a*k1 + b*k2 = gcd(a,b)
      * @return пара коеффициентов k1 и k2
      */
-    private static BigInteger[] xgcd(BigInteger a, BigInteger b) {
+    private static BigInteger[] extendGcd(BigInteger a, BigInteger b) {
         BigInteger x = a, y = b;
         BigInteger[] qrem;
         BigInteger[] result = new BigInteger[3];
@@ -113,12 +118,37 @@ public final class RSA {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
             digest.reset();
-            digest.update(text.getBytes("utf8"));
+            digest.update(text.getBytes(StandardCharsets.UTF_8));
             hash = new BigInteger(1, digest.digest());
         } catch (Exception e){
             e.printStackTrace();
         }
         return hash;
+    }
+
+    private static void checkBitLength(int bits) {
+        if (bits < 81)
+            throw new IllegalArgumentException("Keys length must be greater than 80");
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class OpenKey {
+        private BigInteger e;
+        private BigInteger n;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class SecretKey {
+        private BigInteger d;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class Message {
+        private String text;
+        private String sign;
     }
 }
 

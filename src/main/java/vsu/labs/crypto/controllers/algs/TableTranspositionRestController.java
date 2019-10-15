@@ -37,8 +37,9 @@ public class TableTranspositionRestController extends AbstractAlgController {
         return Response.success(tableTranspositionService.decrypt(request.getBlocks()));
     }
 
-    @GetMapping("blocks")
+    @Override
     public Response getBlocks() {
+        log.info("call get blocks");
         return Response.success(tableTranspositionService.getAlgorithmBlocks());
     }
 }

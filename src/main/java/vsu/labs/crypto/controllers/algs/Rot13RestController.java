@@ -36,7 +36,7 @@ public class Rot13RestController extends AbstractAlgController {
         return Response.success(rot13Service.decrypt(request.getBlocks()));
     }
 
-    @GetMapping("blocks")
+    @Override
     public Response getBlocks() {
         log.info("call get blocks");
         return Response.success(rot13Service.getBlocks());

@@ -39,7 +39,6 @@ public class MorseController extends AbstractAlgController {
     }
 
     @Override
-    @GetMapping("blocks")
     public Response getBlocks() {
         return Response.success(morseService.getBlocks());
     }

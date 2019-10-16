@@ -15,5 +15,6 @@
     <include file="classpath:changelogs/test-data/tests/data_for_test_3.1.sql"/>
     <include file="classpath:changelogs/test-data/tests/data_for_test_3.2.sql"/>
     <include file="classpath:changelogs/test-data/tests/data_for_test_3.3.sql"/>
+    <include file="classpath:changelogs/test-data/tests/data_for_test_marks_3.4.sql"/>
 
 </databaseChangeLog>

@@ -2,12 +2,14 @@ package vsu.labs.crypto.algs.common;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Map;
 import java.util.Set;
 
 @Data
+@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class BlocksResponse {
     private Map<String, ControlPanelBlock> blocks;
@@ -16,30 +18,21 @@ public class BlocksResponse {
     private Boolean withStart = false;
     private Boolean withEncrypt = false;
     private Boolean withEncode = false;
-
-    private BlocksResponse(Map<String, ControlPanelBlock> blocks,
-                           Boolean withKeysGeneration,
-                           Boolean withStart,
-                           Boolean withEncrypt,
-                           Boolean withEncode) {
-
-        this(blocks, blocks.keySet(), withKeysGeneration, withStart, withEncrypt, withEncode);
-    }
+    private Boolean withCheckSign = false;
 
     public static BlocksResponse withEncrypt(Map<String, ControlPanelBlock> blocks) {
-        return new BlocksResponse(blocks, false, false, true, false);
+        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).withEncrypt(true).build();
     }
 
     public static BlocksResponse withStart(Map<String, ControlPanelBlock> blocks) {
-        return new BlocksResponse(blocks,
-                false, true, false, false);
-    }
-
-    public static BlocksResponse withEncryptAndKeys(Map<String, ControlPanelBlock> blocks) {
-        return new BlocksResponse(blocks, true, false, true, false);
+        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).withStart(true).build();
     }
 
     public static BlocksResponse withEncode(Map<String, ControlPanelBlock> blocks) {
-        return new BlocksResponse(blocks, false, false, false, true);
+        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).withEncode(true).build();
+    }
+
+    public static BlocksResponse withCheckSign(Map<String, ControlPanelBlock> blocks) {
+        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).withKeysGeneration(true).withCheckSign(true).build();
     }
 }

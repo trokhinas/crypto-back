@@ -38,7 +38,6 @@ public class AuthService {
         return new AuthResponse(user, RoleType.ADMIN);
     }
 
-    // TODO реализовать функцию получению хэша от пароля
     private String getHash(String password) {
         return Sha1.hash(password);
     }

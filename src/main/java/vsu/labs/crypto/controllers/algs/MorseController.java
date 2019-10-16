@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import vsu.labs.crypto.controllers.algs.abstr.AbstractAlgController;
 import vsu.labs.crypto.dto.algs.AlgBlockRequest;
 import vsu.labs.crypto.dto.response.Response;
-import vsu.labs.crypto.service.algs.encryption.MorseService;
+import vsu.labs.crypto.service.algs.encode.MorseService;
 
 @RestController
 @RequestMapping("morse")

@@ -1,9 +1,7 @@
 package vsu.labs.crypto.controllers.test;
 
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vsu.labs.crypto.dto.test.TaskDto;
 import vsu.labs.crypto.dto.test.OptionDto;
 import vsu.labs.crypto.service.test.TaskService;
@@ -19,5 +17,9 @@ public class TaskController {
     @GetMapping
     public List<OptionDto<TaskDto>> getAll(){
         return taskService.getAll();
+    }
+    @PostMapping
+    public Boolean createTask(@RequestBody TaskDto taskDto) throws Exception {
+        return taskService.createTask(taskDto);
     }
 }

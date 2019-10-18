@@ -19,6 +19,15 @@ import java.util.List;
 public class QuestionService {
     private final QuestionRepository questionRepository;
     private final QuestionMapper questionMapper;
+
+    public boolean createQuest(QuestionDto questionDto) throws Exception {
+        QuestionEntity createdQuest = questionRepository.save(questionMapper.fromDto(questionDto));
+        if (createdQuest == null) {
+            throw new Exception("Не сохранён создаваемый вопрос");
+        }
+        return true;
+    }
+
     public List<OptionDto<QuestionDto>> getAll() {
 
         List<QuestionEntity> allQuest = questionRepository.findAll();

@@ -16,13 +16,21 @@ import java.util.List;
 public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
-    public List<OptionDto<TaskDto>> getAll(){
+
+    public boolean createTask(TaskDto taskDto) throws Exception {
+        TaskEntity createdTask = taskRepository.save(taskMapper.fromDto(taskDto));
+        if (createdTask == null)
+            throw new Exception("Произошла ошибка в сохранении таска");
+        return true;
+    }
+
+    public List<OptionDto<TaskDto>> getAll() {
         List<TaskEntity> allTask = taskRepository.findAll();
         List<OptionDto<TaskDto>> allTaskDto = new ArrayList<>();
-        for (TaskEntity currentTask: allTask){
+        for (TaskEntity currentTask : allTask) {
             OptionDto<TaskDto> newTaskDto = new OptionDto<>();
             newTaskDto.setValue(taskMapper.toDto(currentTask));
-            newTaskDto.setLabel(currentTask.getQuestion().getName().substring(0,29));// лейбл это первые 30 символов вопроса,на который он указывает
+            newTaskDto.setLabel(currentTask.getQuestion().getName().substring(0, 29));// лейбл это первые 30 символов вопроса,на который он указывает
             allTaskDto.add(newTaskDto);
         }
         return allTaskDto;

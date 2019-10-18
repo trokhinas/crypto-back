@@ -26,4 +26,8 @@ public class QuestionController {
     public List<OptionDto<QuestionDto>> getAll(){
         return questionService.getAll();
     }
+    @PostMapping
+    public boolean createQuest(@RequestBody QuestionDto questionDto) throws Exception {
+        return questionService.createQuest(questionDto);
+    }
 }

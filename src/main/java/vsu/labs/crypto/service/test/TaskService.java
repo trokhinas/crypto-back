@@ -17,6 +17,8 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
 
+    private static final int SHORT_NAME_LENGTH = 60;
+
     public boolean createTask(TaskDto taskDto) throws Exception {
         TaskEntity createdTask = taskRepository.save(taskMapper.fromDto(taskDto));
         if (createdTask == null)
@@ -30,9 +32,14 @@ public class TaskService {
         for (TaskEntity currentTask : allTask) {
             OptionDto<TaskDto> newTaskDto = new OptionDto<>();
             newTaskDto.setValue(taskMapper.toDto(currentTask));
-            newTaskDto.setLabel(currentTask.getQuestion().getName().substring(0, 29));// лейбл это первые 30 символов вопроса,на который он указывает
+            newTaskDto.setLabel(generateLabel(currentTask));// лейбл это первые 30 символов вопроса,на который он указывает
             allTaskDto.add(newTaskDto);
         }
         return allTaskDto;
+    }
+
+    private String generateLabel(TaskEntity currentTask) {
+        String questionText = currentTask.getQuestion().getName();
+        return questionText.length() > SHORT_NAME_LENGTH ? questionText.substring(0, SHORT_NAME_LENGTH - 1) : questionText;
     }
 }

@@ -4,9 +4,12 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import vsu.labs.crypto.enums.ResponseBlockEnum;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import static vsu.labs.crypto.enums.ResponseBlockEnum.*;
 
 @Data
 @Builder
@@ -14,25 +17,30 @@ import java.util.Set;
 public class BlocksResponse {
     private Map<String, ControlPanelBlock> blocks;
     private final Set<String> ids;
-    private Boolean withKeysGeneration = false;
-    private Boolean withStart = false;
-    private Boolean withEncrypt = false;
-    private Boolean withEncode = false;
-    private Boolean withCheckSign = false;
+    private Map<String,Boolean> map;
 
     public static BlocksResponse withEncrypt(Map<String, ControlPanelBlock> blocks) {
-        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).withEncrypt(true).build();
+        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).map(new HashMap<>(){{
+            put(WithEncrypt.getValue(),true);
+        }}).build();
     }
 
     public static BlocksResponse withStart(Map<String, ControlPanelBlock> blocks) {
-        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).withStart(true).build();
+        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).map(new HashMap<>(){{
+            put(WithStart.getValue(),true);
+        }}).build();
     }
 
     public static BlocksResponse withEncode(Map<String, ControlPanelBlock> blocks) {
-        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).withEncode(true).build();
+        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).map(new HashMap<>(){{
+            put(WithEncode.getValue(),true);
+        }}).build();
     }
 
     public static BlocksResponse withCheckSign(Map<String, ControlPanelBlock> blocks) {
-        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).withKeysGeneration(true).withCheckSign(true).build();
+        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).map(new HashMap<>(){{
+            put(WithKeysGeneration.getValue(),true);
+            put(WithCheckSign.getValue(),true);
+        }}).build();
     }
 }

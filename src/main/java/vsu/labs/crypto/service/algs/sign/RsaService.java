@@ -33,17 +33,24 @@ public class RsaService {
         var keys = RSA.genKeys(81);
         var open = keys.getFirst();
         var secret = keys.getSecond();
-        String response = "открытый ключ e = "+ open.getE()+ "\n откртый ключ n = "+ open.getN() + "\n закрытый ключ d = " + secret.getD();
-        return response;
+        return "Открытый ключ e = "+ open.getE()+ "\n" +
+                "открытый ключ n = "+ open.getN() + "\n " +
+                "закрытый ключ d = " + secret.getD();
 
     }
 
     public String checkSign(Map<String, ControlPanelBlock> blocks)  {
-        List<String> listName = new ArrayList<>(Arrays.asList("text","sign","openE","openN"));
-        DefaultBlocksChecker.checkBlocks(blocks,listName);
+        List<String> listName = new ArrayList<>(Arrays.asList("text", "sign", "openE", "openN"));
+        DefaultBlocksChecker.checkBlocks(blocks, listName);
         BigInteger openE = BigInteger.valueOf(Integer.valueOf(blocks.get("openE").getValue()));
         BigInteger openN = BigInteger.valueOf(Integer.valueOf(blocks.get("openN").getValue()));
-        boolean check = RSA.checkSign(new RSA.OpenKey(openE,openN),new RSA.Message(blocks.get("text").getValue(),blocks.get("sign").getValue()));
+        boolean check = RSA.checkSign(
+                new RSA.OpenKey(openE,openN),
+                new RSA.Message
+                        (blocks.get("text").getValue(),
+                        blocks.get("sign").getValue()
+                        )
+        );
         if (check){
             return "Проверка по открытому ключу пройдена успешно";
         }

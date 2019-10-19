@@ -1,10 +1,10 @@
 package vsu.labs.crypto.algs.common;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import vsu.labs.crypto.enums.ResponseBlockEnum;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +17,7 @@ import static vsu.labs.crypto.enums.ResponseBlockEnum.*;
 public class BlocksResponse {
     private Map<String, ControlPanelBlock> blocks;
     private final Set<String> ids;
+    @JsonProperty("buttonsMap")
     private Map<String,Boolean> map;
 
     public static BlocksResponse withEncrypt(Map<String, ControlPanelBlock> blocks) {

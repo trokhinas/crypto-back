@@ -20,4 +20,5 @@ public class RsaRestController extends AbstractAlgController {
         log.info("call get blocks");
         return Response.success(rsaService.getBlocks());
     }
+
 }

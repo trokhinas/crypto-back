@@ -16,6 +16,13 @@ public class TestService {
     private final TestRepository testRepository;
     private final TestMapper testMapper;
 
+    public boolean create(TestDto testDto) throws Exception {
+        TestEntity createdEntity = testRepository.save(testMapper.fromDto(testDto)) ;
+        if (createdEntity == null)
+            throw new Exception("Проблема с созданием теста");
+        return true;
+    }
+
     public boolean addTest(TestDto testDto) {
         TestEntity testOnSave = testMapper.fromDto(testDto);
         TestEntity saveTest = testRepository.save(testOnSave);

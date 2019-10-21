@@ -1,45 +1,47 @@
 package vsu.labs.crypto.algs.common;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import static vsu.labs.crypto.enums.ResponseBlockEnum.*;
 
 @Data
+@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class BlocksResponse {
     private Map<String, ControlPanelBlock> blocks;
     private final Set<String> ids;
-    private Boolean withKeysGeneration = false;
-    private Boolean withStart = false;
-    private Boolean withEncrypt = false;
-    private Boolean withEncode = false;
-
-    private BlocksResponse(Map<String, ControlPanelBlock> blocks,
-                           Boolean withKeysGeneration,
-                           Boolean withStart,
-                           Boolean withEncrypt,
-                           Boolean withEncode) {
-
-        this(blocks, blocks.keySet(), withKeysGeneration, withStart, withEncrypt, withEncode);
-    }
+    @JsonProperty("buttonsMap")
+    private Map<String,Boolean> map;
 
     public static BlocksResponse withEncrypt(Map<String, ControlPanelBlock> blocks) {
-        return new BlocksResponse(blocks, false, false, true, false);
+        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).map(new HashMap<>(){{
+            put(WithEncrypt.getValue(),true);
+        }}).build();
     }
 
     public static BlocksResponse withStart(Map<String, ControlPanelBlock> blocks) {
-        return new BlocksResponse(blocks,
-                false, true, false, false);
-    }
-
-    public static BlocksResponse withEncryptAndKeys(Map<String, ControlPanelBlock> blocks) {
-        return new BlocksResponse(blocks, true, false, true, false);
+        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).map(new HashMap<>(){{
+            put(WithStart.getValue(),true);
+        }}).build();
     }
 
     public static BlocksResponse withEncode(Map<String, ControlPanelBlock> blocks) {
-        return new BlocksResponse(blocks, false, false, false, true);
+        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).map(new HashMap<>(){{
+            put(WithEncode.getValue(),true);
+        }}).build();
+    }
+
+    public static BlocksResponse withCheckSign(Map<String, ControlPanelBlock> blocks) {
+        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).map(new HashMap<>(){{
+            put(WithKeysGeneration.getValue(),true);
+            put(WithCheckSign.getValue(),true);
+        }}).build();
     }
 }

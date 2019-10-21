@@ -1,4 +1,4 @@
-package vsu.labs.crypto.service.algs.encryption;
+package vsu.labs.crypto.service.algs.encode;
 
 import org.springframework.stereotype.Service;
 import vsu.labs.crypto.algs.common.BlocksResponse;

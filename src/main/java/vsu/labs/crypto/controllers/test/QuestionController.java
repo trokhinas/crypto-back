@@ -2,13 +2,11 @@ package vsu.labs.crypto.controllers.test;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import vsu.labs.crypto.dto.response.Response;
 import vsu.labs.crypto.dto.test.QuestionDto;
-import vsu.labs.crypto.entity.test.QuestionEntity;
-import vsu.labs.crypto.enums.RoleType;
 import vsu.labs.crypto.enums.TaskType;
 import vsu.labs.crypto.service.test.QuestionService;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("question")
@@ -18,7 +16,20 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("all")
-    public List<QuestionDto> allQuestionType(@RequestParam TaskType type){
-        return questionService.getAllQuestionByType(type);
+    public Response allQuestionType(@RequestParam TaskType type){
+        return Response.success(questionService.getAllQuestionByType(type));
+    }
+
+    @GetMapping("options")
+    public Response getAll(@RequestParam(required = false) TaskType taskType){
+        if (taskType != null)
+            return Response.success(questionService.getOptionsByType(taskType));
+        return Response.success(questionService.getAll());
+    }
+
+
+    @PostMapping
+    public boolean createQuest(@RequestBody QuestionDto questionDto) throws Exception {
+        return questionService.createQuest(questionDto);
     }
 }

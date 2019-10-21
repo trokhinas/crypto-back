@@ -40,7 +40,7 @@ public final class BlockBuilder {
         }
 
         public Map<String, ControlPanelBlock> build() {
-            Map<String, ControlPanelBlock> result = new HashMap<>(blockMap);
+            Map<String, ControlPanelBlock> result = new LinkedHashMap<>(blockMap);
             blockMap.clear();
 
             return result;

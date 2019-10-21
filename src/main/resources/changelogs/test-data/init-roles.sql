@@ -12,3 +12,5 @@ insert into "users" (name, surname, login, password, role_id)
 values ('Tosha', 'Trokhin', 'tosha_teacher', 'b1b3773a05c0ed0176787a4f1574ff0075f7521e', 2000);
 insert into "users" (name, surname, login, password, role_id)
 values ('Tosha', 'Trokhin', 'tosha_student', 'b1b3773a05c0ed0176787a4f1574ff0075f7521e', 1000);
+insert into "users" (name, surname, login, password, role_id)
+values ('Anton', 'Robot', 'tosha_robot', 'b1b3773a05c0ed0176787a4f1574ff0075f7521e', 1000);

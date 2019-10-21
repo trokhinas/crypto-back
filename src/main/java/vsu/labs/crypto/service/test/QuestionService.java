@@ -70,6 +70,7 @@ public class QuestionService {
                     if (check)
                         result.add(curQuestion);
                 }
+                break;
             }
             case MANUAL: {
                 for (int i = 0; i < allQuestion.size(); i++) {
@@ -80,6 +81,7 @@ public class QuestionService {
                     } else
                         result.add(curQuestion);
                 }
+                break;
             }
             case MULTISELECT: {
                 for (int i = 0; i < allQuestion.size(); i++) {
@@ -97,6 +99,7 @@ public class QuestionService {
                         result.add(curQuestion);
                 }
             }
+            break;
         }
         return questionMapper.toDto(result);
     }

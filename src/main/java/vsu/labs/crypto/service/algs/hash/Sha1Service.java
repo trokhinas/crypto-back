@@ -42,6 +42,6 @@ public class Sha1Service {
     }
 
     public void checkBlocks(Map<String, ControlPanelBlock> blocks) {
-        DefaultBlocksChecker.checkBlocks(blocks, REQUIRED_IDS);
+        DefaultBlocksChecker.checkBlocksAllRequired(blocks, REQUIRED_IDS);
     }
 }

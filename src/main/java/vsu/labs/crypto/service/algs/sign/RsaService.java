@@ -9,7 +9,6 @@ import vsu.labs.crypto.dto.crypto.StageData;
 import vsu.labs.crypto.service.algs.common.DefaultBlocksChecker;
 import vsu.labs.crypto.utils.algs.BlockBuilder;
 
-import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,9 +61,9 @@ public class RsaService {
 
     public String checkSign(Map<String, ControlPanelBlock> blocks)  {
         List<String> listName = new ArrayList<>(Arrays.asList("text", "sign", "openE", "openN"));
-        DefaultBlocksChecker.checkBlocks(blocks, listName);
-        BigInteger openE = BigInteger.valueOf(Integer.valueOf(blocks.get("openE").getValue()));
-        BigInteger openN = BigInteger.valueOf(Integer.valueOf(blocks.get("openN").getValue()));
+        DefaultBlocksChecker.checkOnlyRequiredBlocks(blocks, listName);
+        BigInteger openE = new BigInteger(blocks.get("openE").getValue());
+        BigInteger openN = new BigInteger(blocks.get("openN").getValue());
         boolean check = RSA.checkSign(
                 new RSA.OpenKey(openE,openN),
                 new RSA.Message
@@ -85,13 +84,27 @@ public class RsaService {
 
         return new PartitionAlgData(allStages,generateKeys());
     }
-    public PartitionAlgData stagingGenerateMessage(BigInteger secretKey,BigInteger n,String message) {
+    public PartitionAlgData stagingGenerateMessage(Map<String, ControlPanelBlock> blocks) {
         List<StageData> allStages = stagesGenerateMessage.stream()
                 .map(StageData::message)
                 .collect(Collectors.toList());
 
-        return new PartitionAlgData(allStages,RSA.genMessageWithSign(new RSA.SecretKey(secretKey),n,message));
+        return new PartitionAlgData(allStages, generateMessage(blocks));
     }
+
+    public String generateMessage(Map<String, ControlPanelBlock> blocks) {
+        List<String> listName = new ArrayList<>(Arrays.asList("text", "secretD", "openN"));
+        DefaultBlocksChecker.checkOnlyRequiredBlocks(blocks, listName);
+
+        BigInteger secretD = new BigInteger(blocks.get("secretD").getValue());
+        BigInteger openN = new BigInteger(blocks.get("openN").getValue());
+        String text = blocks.get("text").getValue();
+
+        var message = RSA.genMessageWithSign(new RSA.SecretKey(secretD), openN, text);
+        return "Исходное сообщение - [" + message.getText() + "] \n"
+                + "Подпись - [" + message.getSign() + "]";
+    }
+
     public PartitionAlgData stagingCheckMessage(Map<String, ControlPanelBlock> blocks) {
         List<StageData> allStages = stagesCheckMessage.stream()
                 .map(StageData::message)

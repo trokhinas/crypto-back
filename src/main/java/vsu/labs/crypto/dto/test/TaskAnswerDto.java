@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class TaskAnswerDto {
-    private TaskDto taskDto;
+    private TaskDto task;
     private Object value;
 }

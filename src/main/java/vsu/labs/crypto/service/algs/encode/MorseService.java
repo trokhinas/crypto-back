@@ -50,7 +50,7 @@ public class MorseService {
     }
 
     private void checkBlocks(Map<String, ControlPanelBlock> blocks) {
-        DefaultBlocksChecker.checkBlocks(blocks, REQUIRED_BLOCKS);
+        DefaultBlocksChecker.checkBlocksAllRequired(blocks, REQUIRED_BLOCKS);
     }
 
     private String getValueFromBlockWithId(String id, Map<String, ControlPanelBlock> blocks) {

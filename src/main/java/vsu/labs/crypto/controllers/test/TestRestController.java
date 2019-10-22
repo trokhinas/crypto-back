@@ -33,8 +33,9 @@ public class TestRestController {
     }
 
 
-    @PostMapping("addTest")
-    public boolean addTest(@RequestBody TestDto test) {
-        return testService.addTest(test);
+    @PostMapping("add-test")
+    public Response addTest(@RequestBody TestDto test) {
+        testService.addTest(test);
+        return Response.success();
     }
 }

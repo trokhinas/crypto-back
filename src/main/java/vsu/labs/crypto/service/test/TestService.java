@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import vsu.labs.crypto.dto.mapper.TestMapper;
 import vsu.labs.crypto.dto.test.TestDto;
 import vsu.labs.crypto.entity.JpaRepository.TestRepository;
+import vsu.labs.crypto.entity.test.TaskEntity;
 import vsu.labs.crypto.entity.test.TestEntity;
 
 import java.util.List;
@@ -25,6 +26,9 @@ public class TestService {
 
     public boolean addTest(TestDto testDto) {
         TestEntity testOnSave = testMapper.fromDto(testDto);
+        for (TaskEntity task: testOnSave.getTasks()){
+            task.setTest(testOnSave);
+        }
         TestEntity saveTest = testRepository.save(testOnSave);
         return saveTest != null;
     }

@@ -27,18 +27,25 @@ public class AnswerService {
         for (TaskAnswerDto current : request) {
             trueAnswer += checkAnswer(current);
         }
-        MarkEntity markOfUser = new MarkEntity();
-        markOfUser.setAll_question(request.size());//вообще должно быть количество в тесте,но в целом прикольно если будет показываться,сколько правилно из того что прошёл(лентяй я// )
-        markOfUser.setCorrectAnswer(trueAnswer);
-        markOfUser.setUserId(userId);
-        markOfUser.setTestId(testId);
-        markRepository.save(markOfUser);
+        MarkEntity userInDB = markRepository.findByUserIdAndTestId(userId,testId);
+        if (userInDB==null) {
+            MarkEntity markOfUser = new MarkEntity();
+            markOfUser.setAll_question(request.size());//вообще должно быть количество в тесте,но в целом прикольно если будет показываться,сколько правилно из того что прошёл(лентяй я// )
+            markOfUser.setCorrectAnswer(trueAnswer);
+            markOfUser.setUserId(userId);
+            markOfUser.setTestId(testId);
+            markRepository.save(markOfUser);
+        }
+        else {
+            userInDB.setCorrectAnswer(trueAnswer);
+            markRepository.save(userInDB);
+        }
         String response = "Вы ответили правильно на"+Integer.toString(trueAnswer)+ " из "+ Integer.toString(request.size())+" вопросов";
         return new CheckedTask(response);
     }
 
     public int checkAnswer(TaskAnswerDto taskAnswer) {
-        TaskDto taskDto = taskAnswer.getTaskDto();
+        TaskDto taskDto = taskAnswer.getTask();
         switch (taskDto.getType()) {
             case SELECT: {
                 List<Long> answerOfUser = (List<Long>) taskAnswer.getValue();
@@ -50,7 +57,7 @@ public class AnswerService {
                 }
             }
             case MULTISELECT: {
-                List<Long> answerOfUser = (List<Long>) taskAnswer.getValue();
+                List<Integer> answerOfUser = (List<Integer>) taskAnswer.getValue();
                 QuestionEntity question = questionRepository.findById(taskDto.getQuestion().getQuestionId()).get();
                 List<AnswerEntity> answers = question.getAnswerList();
                 List<Long> correctAnswer = new ArrayList<>();
@@ -61,7 +68,9 @@ public class AnswerService {
                 int counterOfTrueAnswer = 0;
                 for (int i = 0; i < answerOfUser.size(); i++) {
                     for (int j = 0; j < correctAnswer.size(); j++) {
-                        if (answerOfUser.get(i).equals(correctAnswer.get(i)))
+                        Long correct = correctAnswer.get(i);
+                        Long userAnswer = answerOfUser.get(i).longValue();
+                        if (correct.equals(userAnswer))
                             counterOfTrueAnswer++;
                     }
                 }

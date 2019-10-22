@@ -9,7 +9,9 @@ import vsu.labs.crypto.entity.test.MarkEntity;
 import vsu.labs.crypto.entity.test.TestEntity;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -51,6 +53,8 @@ public class ProfileService {
                 tests.add(userTest);
             }
         }
-        return tests;
+        return tests.stream()
+                .sorted(Comparator.comparingLong(UserTestDto::getId))
+                .collect(Collectors.toList());
     }
 }

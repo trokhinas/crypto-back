@@ -11,7 +11,7 @@ public final class DefaultBlocksChecker {
 
     private DefaultBlocksChecker() { }
 
-    public static void checkBlocks(Map<String, ControlPanelBlock> blockMap, List<String> requiredIds) {
+    public static void checkBlocksAllRequired(Map<String, ControlPanelBlock> blockMap, List<String> requiredIds) {
         requiredIds.forEach(blockId -> {
             if (!blockMap.containsKey(blockId)) {
                 throw new IllegalStateException("Отсутствует блок с id " + blockId);
@@ -19,6 +19,20 @@ public final class DefaultBlocksChecker {
         });
         for (var handler: DEFAULT_HANDLERS) {
             blockMap.values().forEach(handler::handle);
+        }
+    }
+    public static void checkOnlyRequiredBlocks(Map<String, ControlPanelBlock> blockMap, List<String> requiredIds) {
+        requiredIds.forEach(blockId -> {
+            if (!blockMap.containsKey(blockId)) {
+                throw new IllegalStateException("Отсутствует блок с id " + blockId);
+            }
+        });
+        for (var handler: DEFAULT_HANDLERS) {
+            blockMap.values().forEach(block -> {
+                if (requiredIds.contains(block.getId())) {
+                    handler.handle(block);
+                }
+            });
         }
     }
 }

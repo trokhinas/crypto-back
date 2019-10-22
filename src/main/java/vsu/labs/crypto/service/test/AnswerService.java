@@ -27,12 +27,19 @@ public class AnswerService {
         for (TaskAnswerDto current : request) {
             trueAnswer += checkAnswer(current);
         }
-        MarkEntity markOfUser = new MarkEntity();
-        markOfUser.setAll_question(request.size());//вообще должно быть количество в тесте,но в целом прикольно если будет показываться,сколько правилно из того что прошёл(лентяй я// )
-        markOfUser.setCorrectAnswer(trueAnswer);
-        markOfUser.setUserId(userId);
-        markOfUser.setTestId(testId);
-        markRepository.save(markOfUser);
+        MarkEntity userInDB = markRepository.findByUserIdAndTestId(userId,testId);
+        if (userInDB==null) {
+            MarkEntity markOfUser = new MarkEntity();
+            markOfUser.setAll_question(request.size());//вообще должно быть количество в тесте,но в целом прикольно если будет показываться,сколько правилно из того что прошёл(лентяй я// )
+            markOfUser.setCorrectAnswer(trueAnswer);
+            markOfUser.setUserId(userId);
+            markOfUser.setTestId(testId);
+            markRepository.save(markOfUser);
+        }
+        else {
+            userInDB.setCorrectAnswer(trueAnswer);
+            markRepository.save(userInDB);
+        }
         String response = "Вы ответили правильно на"+Integer.toString(trueAnswer)+ " из "+ Integer.toString(request.size())+" вопросов";
         return new CheckedTask(response);
     }

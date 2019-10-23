@@ -24,6 +24,9 @@ public final class Wavelet {
             int w = bufferedImageSrc.getWidth(), h = bufferedImageSrc.getHeight();
             if (w != h || (w & (w - 1)) != 0)
                 throw new IllegalArgumentException("Image size must be power of 2 and width must be equals height");
+            String fileType = getFileExtension(newImagePath);
+            if (fileType.equals(""))
+                throw new IllegalArgumentException("File extension not specified for compressed image");
             double[][] pixRed = new double[w][h],pixBlue = new double[w][h], pixGreen = new double[w][h];
             for( int i = 0; i < w; i++ )
                 for( int j = 0; j < h; j++ ) {
@@ -55,7 +58,7 @@ public final class Wavelet {
             haarTransformDataBack(pixGreen);
 
             int[] newPixels = getImagePixelArray(pixBlue, pixGreen, pixRed);
-            writeImageWithPixels(newImagePath, newPixels, w, h);
+            writeImageWithPixels(newImagePath, newPixels, w, h, fileType);
 
             return compCoef;
         } catch (IOException e) {
@@ -84,11 +87,11 @@ public final class Wavelet {
      * @param w ширина изображения
      * @param h высота изображения
      */
-    private static void writeImageWithPixels(String pathToImage, int[] pixels, int w, int h) throws IOException {
+    private static void writeImageWithPixels(String pathToImage, int[] pixels, int w, int h, String fileType) throws IOException {
         BufferedImage pixelImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         pixelImage.setRGB(0, 0, w, h, pixels, 0, w);
         File imageFile = new File(pathToImage);
-        ImageIO.write(pixelImage, "png", imageFile);
+        ImageIO.write(pixelImage, fileType, imageFile);
     }
 
     /**
@@ -198,5 +201,15 @@ public final class Wavelet {
                     data[i][j] = 255;
             }
     }
-}
 
+    private static String getFileExtension(String fileName) {
+        String extension = "";
+        int i = fileName.lastIndexOf('.');
+        int p = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'));
+
+        if (i > p) {
+            extension = fileName.substring(i+1);
+        }
+        return extension;
+    }
+}

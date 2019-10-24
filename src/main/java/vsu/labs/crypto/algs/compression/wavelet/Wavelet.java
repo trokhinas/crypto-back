@@ -13,11 +13,12 @@ public final class Wavelet {
      * Сжатие изображение с помощью вейвлета Хаара
      * @param pathToImage путь к изображению
      * @param newImagePath путь к сжатому изображению(с названием)
+     * @param pathToEncodedImage путь к изображению, полученному после пребразования вейвлетом
      * @param eps коэффициент, определяющий границу обнуления элементов во время сжатия
      * @return коэффициент сжатия изображения, выражающийся в усреднённом среди пикселей каждого цвета
      * отношении ненулевых элементов до и после сжатия
      */
-    public static double haarCompression(String pathToImage, String newImagePath, double eps) {
+    public static double haarCompression(String pathToImage, String newImagePath, String pathToEncodedImage, double eps) {
         File imageSrc = new File(pathToImage);
         try {
             BufferedImage bufferedImageSrc = ImageIO.read(imageSrc);
@@ -52,6 +53,11 @@ public final class Wavelet {
             double compCoef = (redNonZerosOld/(double)redNonZerosNew
                     + greenNonZerosOld/(double)greenNonZerosNew
                     + blueNonZerosOld/(double)blueNonZerosNew) / 3;
+
+            if (pathToEncodedImage != null) {
+                int[] newPixels = getImagePixelArray(pixBlue, pixGreen, pixRed);
+                writeImageWithPixels(newImagePath, newPixels, w, h, fileType);
+            }
 
             haarTransformDataBack(pixRed);
             haarTransformDataBack(pixBlue);

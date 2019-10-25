@@ -5,7 +5,10 @@ public enum ResponseBlockEnum {
     WithStart("withStart"),
     WithEncrypt("withEncrypt"),
     WithEncode("withEncode"),
-    WithCheckSign("withCheckSign");
+    WithCheckSign("withCheckSign"),
+    WITH_FILE_COMPRESSION("withFileCompression"),
+    WITH_STRING_COMPRESSION("withStringCompression")
+    ;
 
     private final String value;
 

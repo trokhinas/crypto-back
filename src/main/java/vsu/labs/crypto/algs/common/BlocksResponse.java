@@ -21,6 +21,11 @@ public class BlocksResponse {
     @JsonProperty("buttonsMap")
     private Map<String, Boolean> map;
 
+    public BlocksResponse withProperty(String name) {
+        map.put(name, true);
+        return this;
+    }
+
     public static BlocksResponse withEncrypt(Map<String, ControlPanelBlock> blocks) {
         return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).map(new HashMap<>() {{
             put(WithEncrypt.getValue(), true);

@@ -32,6 +32,6 @@ public interface TaskMapper {
 
 
     default TaskType map(TaskTypeEntity value) {
-        return value.getTaskType();
+        return TaskType.byId(value.getId());
     }
 }

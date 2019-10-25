@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import vsu.labs.crypto.algs.common.BlocksResponse;
 import vsu.labs.crypto.exceptions.algs.encryption.transposition.StorageFileNotFoundException;
 
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 
 @Service
 public class WaveletService {
@@ -42,6 +44,10 @@ public class WaveletService {
         } catch (MalformedURLException e) {
             throw new StorageFileNotFoundException("Could not read file: " + filename, e);
         }
+    }
+
+    public BlocksResponse getBlocks() {
+        return BlocksResponse.withFileCompression(Collections.emptyMap());
     }
 
 

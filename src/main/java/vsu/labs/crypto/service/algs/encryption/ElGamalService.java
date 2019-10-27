@@ -1,5 +1,6 @@
 package vsu.labs.crypto.service.algs.encryption;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import vsu.labs.crypto.algs.common.BlocksResponse;
@@ -12,11 +13,13 @@ import vsu.labs.crypto.service.algs.common.DefaultBlocksChecker;
 import vsu.labs.crypto.utils.algs.BlockBuilder;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class ElGamalService {
 
     private static final List<String> REQUIRED_IDS_ENCRYPT = Arrays.asList(
@@ -25,6 +28,7 @@ public class ElGamalService {
     private static final List<String> REQUIRED_IDS_DECRYPT = Arrays.asList(
             "openA", "openP", "openY", "text", "secretX"
     );
+
     public BlocksResponse getBlocks() {
         Map<String, ControlPanelBlock> blocks = BlockBuilder.buildMap()
                 .withBlock("text", "Текст")
@@ -43,8 +47,8 @@ public class ElGamalService {
         var open = keys.getFirst();
         var secret = keys.getSecond();
 
-        return "Открытый ключ a = "+ open.getA()+ "\n" +
-                "открытый ключ p = "+ open.getP() + "\n " +
+        return "Открытый ключ a = " + open.getA() + "\n" +
+                "открытый ключ p = " + open.getP() + "\n " +
                 "открытый ключ y = " + open.getY() + "\n" +
                 "закрытый ключ x = " + secret.getX();
     }
@@ -71,12 +75,20 @@ public class ElGamalService {
         BigInteger openP = new BigInteger(blocks.get("openP").getValue());
         BigInteger openY = new BigInteger(blocks.get("openY").getValue());
         String text = blocks.get("text").getValue();
+        ElGamal.OpenKey openKey = new ElGamal.OpenKey(openA, openP, openY);
 
         StringBuilder builder = new StringBuilder();
         text.chars().forEach(i -> {
             BigInteger value = BigInteger.valueOf(i);
+            Pair<BigInteger, BigInteger> pair = ElGamal.encrypt(value, openKey);
+            log.info("pair - {}", pair);
+
+            Character c1 = (char) pair.getFirst().longValue();
+            Character c2 = (char) pair.getSecond().longValue();
+            builder.append(c1).append(c2);
         });
-        return null;
+
+        return builder.toString();
     }
 
     public PartitionAlgData stagingDecrypt(Map<String, ControlPanelBlock> blocks) {
@@ -84,7 +96,36 @@ public class ElGamalService {
     }
 
     public String decrypt(Map<String, ControlPanelBlock> blocks) {
-        return null;
+        DefaultBlocksChecker.checkOnlyRequiredBlocks(blocks, REQUIRED_IDS_ENCRYPT);
+        BigInteger openA = new BigInteger(blocks.get("openA").getValue());
+        BigInteger openP = new BigInteger(blocks.get("openP").getValue());
+        BigInteger openY = new BigInteger(blocks.get("openY").getValue());
+        BigInteger secretX = new BigInteger(blocks.get("secretX").getValue());
+        String text = blocks.get("text").getValue();
+        ElGamal.OpenKey openKey = new ElGamal.OpenKey(openA, openP, openY);
+        ElGamal.SecretKey secretKey = new ElGamal.SecretKey(secretX);
+
+        StringBuilder builder = new StringBuilder();
+        List<Pair<String, String>> pairs = new ArrayList<>();
+        for (int i = 0; i < text.length() / 2; i++) {
+            String c1 = String.valueOf(text.charAt(i));
+            String c2 = String.valueOf(text.charAt(i + 1));
+
+            pairs.add(Pair.of(c1, c2));
+        }
+        pairs.stream()
+                .map(pair ->
+                        Pair.of(
+                                BigInteger.valueOf((long) pair.getFirst().charAt(0)),
+                                BigInteger.valueOf((long) pair.getSecond().charAt(0))
+                        )
+                )
+                .forEach(pair -> {
+                    Character result = (char) ElGamal.decrypt(pair, openKey, secretKey).longValue();
+                    builder.append(result);
+                });
+
+        return builder.toString();
     }
 
 }

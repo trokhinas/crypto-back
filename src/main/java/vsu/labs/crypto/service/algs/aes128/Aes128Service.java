@@ -30,7 +30,7 @@ public class Aes128Service {
                 .withBlock("sign","подпись")
                 .build();
 
-        return BlocksResponse.withEncode(blockMap);
+        return BlocksResponse.withCheckSign(blockMap);
     }
 
     public String encode(Map<String, ControlPanelBlock> blocks) {
@@ -40,7 +40,7 @@ public class Aes128Service {
         return AES128.encode(text,secretKey);
     }
 
-    public boolean decode(Map<String, ControlPanelBlock> blocks) {
+    public String decode(Map<String, ControlPanelBlock> blocks) {
         checkBlocks(blocks);
         String text = getValueFromBlockWithId("text", blocks);
         String secretKey = getValueFromBlockWithId("secretKey",blocks);

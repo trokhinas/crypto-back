@@ -2,6 +2,7 @@ package vsu.labs.crypto.algs.digSignature.aes128;
 
 import vsu.labs.crypto.dto.crypto.PartitionAlgData;
 import vsu.labs.crypto.dto.crypto.StageData;
+import vsu.labs.crypto.exceptions.LogicException;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -78,12 +79,18 @@ public class AES128 {
 
     public static String encode(String message, String secret) {
         String sign = encrypt(message, secret);
+        if (sign == null)
+            //здесь illegal так как такая ошибка невозможна
+            throw new IllegalStateException();
         return sign;
     }
 
-    public static boolean decode(String message, String secret, String sign) {
+    public static String decode(String message, String secret, String sign) {
         String checkedSign = decrypt(sign, secret);
-        return checkedSign.equals(message);
+        if (checkedSign == null)
+            //здесь наш exception потому что при ошибочной подписи decrypt возвращает null
+            throw new LogicException("Проверка подписи провалена");
+        return checkedSign.equals(message) ? "Проверка подписи пройдена" : "Проверка подписи провалена";
     }
 
     public static PartitionAlgData stagingEncrypt(String message, String secret) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {

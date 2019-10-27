@@ -29,22 +29,24 @@ public class AES128Controller extends AbstractAlgController {
     private interface Action {
         Object act(Map<String, ControlPanelBlock> blocks) throws NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, UnsupportedEncodingException, InvalidKeyException;
     }
+
     @Override
     public Response getBlocks() {
         log.info("call get blocks");
         return Response.success(aes128Service.getBlocks());
     }
 
-    @PostMapping("encrypt")
+    @PostMapping("sign-message")
     public Response encrypt(@RequestBody AlgBlockRequest request,
-                         @RequestParam(required = false) Boolean isStaging) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+                            @RequestParam(required = false) Boolean isStaging) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
         log.info("call encrypt with blocks = {}", request.getBlocks());
         Action producer = isStaging ? aes128Service::stagingEncode : aes128Service::encode;
         return Response.success(producer.act(request.getBlocks()));
     }
-    @PostMapping("decrypt")
+
+    @PostMapping("check-sign")
     public Response decrypt(@RequestBody AlgBlockRequest request,
-                         @RequestParam(required = false) Boolean isStaging) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+                            @RequestParam(required = false) Boolean isStaging) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
         log.info("call encrypt with blocks = {}", request.getBlocks());
         Action producer = isStaging ? aes128Service::stagingDecode : aes128Service::decode;
         return Response.success(producer.act(request.getBlocks()));

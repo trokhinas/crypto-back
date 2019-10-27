@@ -20,8 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("rle")
-@AllArgsConstructor
-@Slf4j
+@AllArgsConstructor @Slf4j
 public class RLEController extends AbstractAlgController {
     private final RLEService rleService;
 
@@ -36,7 +35,7 @@ public class RLEController extends AbstractAlgController {
         return Response.success(rleService.getBlocks());
     }
 
-    @PostMapping("encrypt")
+    @PostMapping("encode")
     public Response encrypt(@RequestBody AlgBlockRequest request,
                             @RequestParam(required = false) Boolean isStaging) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
         log.info("call encrypt with blocks = {}", request.getBlocks());
@@ -44,7 +43,7 @@ public class RLEController extends AbstractAlgController {
         return Response.success(producer.act(request.getBlocks()));
     }
 
-    @PostMapping("decrypt")
+    @PostMapping("decode")
     public Response decrypt(@RequestBody AlgBlockRequest request,
                             @RequestParam(required = false) Boolean isStaging) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
         log.info("call encrypt with blocks = {}", request.getBlocks());

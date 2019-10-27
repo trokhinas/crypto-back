@@ -1,10 +1,10 @@
-package vsu.labs.crypto.service.algs.aes128;
+package vsu.labs.crypto.service.algs.rle;
 
 import org.springframework.stereotype.Service;
 import vsu.labs.crypto.algs.common.BlocksResponse;
 import vsu.labs.crypto.algs.common.ControlPanelBlock;
 import vsu.labs.crypto.algs.digSignature.aes128.AES128;
-import vsu.labs.crypto.algs.morse.Morse;
+import vsu.labs.crypto.algs.rle.RLE;
 import vsu.labs.crypto.dto.crypto.PartitionAlgData;
 import vsu.labs.crypto.service.algs.common.DefaultBlocksChecker;
 import vsu.labs.crypto.utils.algs.BlockBuilder;
@@ -20,14 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class Aes128Service {
+public class RLEService {
     private static final List<String> REQUIRED_BLOCKS = Collections.singletonList("text");
 
     public BlocksResponse getBlocks() {
         Map<String, ControlPanelBlock> blockMap = BlockBuilder.buildMap()
                 .withBlock("text", "Текст")
-                .withBlock("secretKey","секретный ключ")
-                .withBlock("sign","подпись")
                 .build();
 
         return BlocksResponse.withEncode(blockMap);
@@ -36,32 +34,26 @@ public class Aes128Service {
     public String encode(Map<String, ControlPanelBlock> blocks) {
         checkBlocks(blocks);
         String text = getValueFromBlockWithId("text", blocks);
-        String secretKey = getValueFromBlockWithId("secretKey",blocks);
-        return AES128.encode(text,secretKey);
+        return RLE.encode(text);
     }
 
-    public boolean decode(Map<String, ControlPanelBlock> blocks) {
+    public String decode(Map<String, ControlPanelBlock> blocks) {
         checkBlocks(blocks);
         String text = getValueFromBlockWithId("text", blocks);
-        String secretKey = getValueFromBlockWithId("secretKey",blocks);
-        String sign = getValueFromBlockWithId("sign",blocks);
-        return AES128.decode(text,secretKey,sign);
+        return RLE.decode(text);
     }
 
 
     public PartitionAlgData stagingEncode(Map<String, ControlPanelBlock> blocks) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException {
         checkBlocks(blocks);
         String text = getValueFromBlockWithId("text", blocks);
-        String secretKey = getValueFromBlockWithId("secretKey",blocks);
-        return AES128.stagingEncrypt(text,secretKey);
+        return RLE.StagingEncode(text);
     }
 
     public PartitionAlgData stagingDecode(Map<String, ControlPanelBlock> blocks) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         checkBlocks(blocks);
         String text = getValueFromBlockWithId("text", blocks);
-        String secretKey = getValueFromBlockWithId("secretKey",blocks);
-        String sign = getValueFromBlockWithId("sign",blocks);
-        return AES128.stagingDecrypt(text,secretKey,sign);
+        return RLE.StagingDecode(text);
     }
     private void checkBlocks(Map<String, ControlPanelBlock> blocks) {
         DefaultBlocksChecker.checkBlocksAllRequired(blocks, REQUIRED_BLOCKS);

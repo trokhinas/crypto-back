@@ -22,16 +22,17 @@ import java.net.URISyntaxException;
 public class WaveletController extends AbstractAlgController {
     private final String pathToRoot = "src/main/resources/pictures";
     private final WaveletService waveletService;
-
+//@RequestParam("id") int id,
     @PostMapping("upload")
-    public String handleFileUpload(@RequestParam("id") int id, @RequestParam("file") MultipartFile file) throws IOException {
+    public String handleFileUpload( @RequestParam("file") MultipartFile file) throws IOException {
+
         if (file != null) {
             File dir = new File(pathToRoot);
             if (!dir.exists()) {
                 dir.mkdir();
             }
             String nameOfPicture = file.getOriginalFilename();
-            file.transferTo(new File(pathToRoot + "/" + nameOfPicture));
+            file.transferTo(dir);
             //todo wavelet
 
         }

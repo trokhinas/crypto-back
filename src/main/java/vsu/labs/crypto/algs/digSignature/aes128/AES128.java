@@ -24,8 +24,18 @@ public class AES128 {
     private static SecretKeySpec secretKey;
     private static byte[] key;
 
-    private static final List<String> stagesEncrypt = Arrays.asList();
-    private static final List<String> stagesDecrypt = Arrays.asList();
+    private static final List<String> stagesEncrypt = Arrays.asList(
+            "1: Получаем хэш от пароля",
+            "2: Преобрзовываем хэш в ключ по правилам описанным в стандарте AES128",
+            "3: Разбиваем текст на блоки по 128 бит",
+            "4: Зашифровываем каждый блок функцией chiper"
+    );
+    private static final List<String> stagesDecrypt = Arrays.asList(
+            "1: Разбиваем текст на блоки по 128 бит",
+            "2: Применяем chiperDecrypt с секретным ключом к каждому блоку",
+            "3: Объединяем расшифрованные блоки",
+            "4: Сверяем получившийся ответ с исходным сообщением"
+    );
 
     public static void setKey(String myKey) {
         MessageDigest sha = null;
@@ -66,28 +76,30 @@ public class AES128 {
         return null;
     }
 
-    public static PartitionAlgData stagingEncrypt(String strToEncrypt, String secret) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
+    public static String encode(String message, String secret) {
+        String sign = encrypt(message, secret);
+        return sign;
+    }
 
-        setKey(secret);
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        String result = Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+    public static boolean decode(String message, String secret, String sign) {
+        String checkedSign = decrypt(sign, secret);
+        return checkedSign.equals(message);
+    }
+
+    public static PartitionAlgData stagingEncrypt(String message, String secret) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
+        String sign = encrypt(message, secret);
         List<StageData> allStages = stagesEncrypt.stream()
                 .map(StageData::message)
                 .collect(Collectors.toList());
-        return new PartitionAlgData(allStages, result);
+        return new PartitionAlgData(allStages, sign);
 
     }
 
-    public static PartitionAlgData stagingDecrypt(String strToDecrypt, String secret) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-
-        setKey(secret);
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        String result = new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
+    public static PartitionAlgData stagingDecrypt(String message, String secret, String sign) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+        String checkedSign = decrypt(sign, secret);
         List<StageData> allStages = stagesDecrypt.stream()
                 .map(StageData::message)
                 .collect(Collectors.toList());
-        return new PartitionAlgData(allStages, result);
+        return new PartitionAlgData(allStages, checkedSign);
     }
 }

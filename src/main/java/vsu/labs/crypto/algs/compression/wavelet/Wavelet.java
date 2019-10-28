@@ -56,7 +56,7 @@ public final class Wavelet {
 
             if (pathToEncodedImage != null) {
                 int[] newPixels = getImagePixelArray(pixBlue, pixGreen, pixRed);
-                writeImageWithPixels(newImagePath, newPixels, w, h, fileType);
+                writeImageWithPixels(pathToEncodedImage, newPixels, w, h, fileType);
             }
 
             haarTransformDataBack(pixRed);
@@ -70,7 +70,7 @@ public final class Wavelet {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return 0;
+        return -1;
     }
 
     /**

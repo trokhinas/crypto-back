@@ -1,5 +1,6 @@
 package vsu.labs.crypto.controllers.algs;
 
+import liquibase.util.file.FilenameUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -16,6 +17,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("wavelet")
@@ -24,6 +26,7 @@ import java.io.IOException;
 public class WaveletController extends AbstractAlgController {
     private final String pathToRoot = "src/main/resources/pictures";
     private final WaveletService waveletService;
+    private static String extension;
 
     @PostMapping("upload")
     public String handleFileUpload(@RequestParam("id") int id, @RequestParam int eps, @RequestParam("file") MultipartFile file) throws IOException {
@@ -32,10 +35,11 @@ public class WaveletController extends AbstractAlgController {
             if (!dir.exists()) {
                 dir.mkdir();
             }
-            String pathOriginalFile = pathToRoot + "/original" + id + ".jpg";
-            String pathTransformedFile = pathToRoot + "/transformed" + id + ".jpg";
-            String pathCompressedFile = pathToRoot + "/Compressed" + id + ".jpg";
-
+            String extension = "."+FilenameUtils.getExtension(file.getOriginalFilename());
+            WaveletController.extension = extension;
+            String pathOriginalFile = pathToRoot + "/original" + id + extension;
+            String pathTransformedFile = pathToRoot + "/transformed" + id + extension;
+            String pathCompressedFile = pathToRoot + "/Compressed" + id + extension;
             File newFile = new File(pathOriginalFile);
             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(newFile));
             stream.write(file.getBytes());
@@ -45,9 +49,17 @@ public class WaveletController extends AbstractAlgController {
         return null;
     }
 
-    @GetMapping("/file")
-    public ResponseEntity<Resource> serveFile() {
-        String path = "original1.jpg";
+    @GetMapping("/transformed")
+    public ResponseEntity<Resource> getTransformed(@RequestParam("id") int id) {
+        String path = "transformed" + id + WaveletController.extension;
+        Resource file = waveletService.loadAsResource(path);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
+    @GetMapping("/compressed")
+    public ResponseEntity<Resource> getCompressed(@RequestParam("id") int id) {
+        String path = "Compressed" + id + WaveletController.extension;
         Resource file = waveletService.loadAsResource(path);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);

@@ -46,6 +46,7 @@ public class WaveletService {
         }
     }
 
+
     public BlocksResponse getBlocks() {
         return BlocksResponse.withFileCompression(Collections.emptyMap());
     }

@@ -7,42 +7,47 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import vsu.labs.crypto.algs.compression.wavelet.Wavelet;
 import vsu.labs.crypto.controllers.algs.abstr.AbstractAlgController;
 import vsu.labs.crypto.dto.response.Response;
 import vsu.labs.crypto.service.algs.Wavelet.WaveletService;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping("wavelet")
-@AllArgsConstructor @Slf4j
+@AllArgsConstructor
+@Slf4j
 public class WaveletController extends AbstractAlgController {
     private final String pathToRoot = "src/main/resources/pictures";
     private final WaveletService waveletService;
-//@RequestParam("id") int id,
-    @PostMapping("upload")
-    public String handleFileUpload( @RequestParam("file") MultipartFile file) throws IOException {
 
+    @PostMapping("upload")
+    public String handleFileUpload(@RequestParam("id") int id, @RequestParam int eps, @RequestParam("file") MultipartFile file) throws IOException {
         if (file != null) {
             File dir = new File(pathToRoot);
             if (!dir.exists()) {
                 dir.mkdir();
             }
-            String nameOfPicture = file.getOriginalFilename();
-            file.transferTo(dir);
-            //todo wavelet
+            String pathOriginalFile = pathToRoot + "/original" + id + ".jpg";
+            String pathTransformedFile = pathToRoot + "/transformed" + id + ".jpg";
+            String pathCompressedFile = pathToRoot + "/Compressed" + id + ".jpg";
 
+            File newFile = new File(pathOriginalFile);
+            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(newFile));
+            stream.write(file.getBytes());
+            stream.close();
+            Wavelet.haarCompression(pathOriginalFile, pathCompressedFile, pathTransformedFile, eps);
         }
         return null;
     }
 
-    @GetMapping("file")
-    @ResponseBody
-    public ResponseEntity<Resource> serveFile() throws MalformedURLException, URISyntaxException {
-        String path = "1true.png";
+    @GetMapping("/file")
+    public ResponseEntity<Resource> serveFile() {
+        String path = "original1.jpg";
         Resource file = waveletService.loadAsResource(path);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);

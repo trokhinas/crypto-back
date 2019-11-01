@@ -23,6 +23,4 @@ public class UserDto {
 
     private long roleId;
 
-
-    private List<LectureEntity> lectures;
 }

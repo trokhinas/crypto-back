@@ -48,16 +48,18 @@ public class LectureController {
         return Response.success();
     }
 
-    @GetMapping("/find")
+    @GetMapping("find")
     public ResponseEntity<Resource> getTransformed(@RequestParam("id") Long id) throws Exception {
 
         String path = lectureService.findLectureById(id);
         Resource file = lectureService.loadAsResource(path);
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+        return ResponseEntity.ok().header(
+                HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
+
     @GetMapping("all")
-    public List<LectureDto> getAll(){
-        return lectureService.getAll();
+    public Response getAll(){
+        return Response.success(lectureService.getAll());
     }
 }

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import vsu.labs.crypto.dto.users.GridColumn;
-import vsu.labs.crypto.dto.users.UserMarksGridResponse;
+import vsu.labs.crypto.dto.users.GridResponse;
 import vsu.labs.crypto.entity.JpaRepository.MarkRepository;
 import vsu.labs.crypto.entity.JpaRepository.TestRepository;
 import vsu.labs.crypto.entity.JpaRepository.UserRepository;
@@ -20,13 +20,13 @@ import java.util.Map;
 
 @Service
 @AllArgsConstructor @Slf4j
-public class UsersGridService {
+public class UsersMarksGridService {
 
     private final UserRepository userRepository;
     private final TestRepository testRepository;
     private final MarkRepository markRepository;
 
-    public UserMarksGridResponse getGridData() {
+    public GridResponse getGridData() {
         List<GridColumn> columns = buildColumns();
         List<UserEntity> students = userRepository.findByRoleId(RoleType.STUDENT.getId());
         List<TestEntity> tests = testRepository.findAll();
@@ -34,7 +34,7 @@ public class UsersGridService {
         List<Map<String, Object>> data = new ArrayList<>();
         students.stream().map(student -> buildStudentRow(student, tests)).forEach(data::add);
 
-        return new UserMarksGridResponse(columns, data);
+        return new GridResponse(columns, data);
     }
 
     private Map<String, Object> buildStudentRow(UserEntity userEntity, List<TestEntity> tests) {

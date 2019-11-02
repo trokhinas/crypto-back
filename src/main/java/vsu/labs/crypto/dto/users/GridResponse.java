@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Data
 @AllArgsConstructor @NoArgsConstructor
-public class UserMarksGridResponse {
+public class GridResponse {
     private List<GridColumn> columns;
     private List<Map<String, Object>> data;
 }

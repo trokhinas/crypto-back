@@ -15,10 +15,6 @@ import vsu.labs.crypto.entity.security.UserEntity;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final MarkRepository markRepository;
-    private final TestRepository testRepository;
-    private final TestMapper testMapper;
-
 
     public boolean addUser(UserDto user) {
         UserEntity userOnSave = userMapper.fromDto(user);
@@ -28,9 +24,8 @@ public class UserService {
         } else return true;
     }
 
-    public void deleteUser(UserDto user) {
-        UserEntity userOnSave = userMapper.fromDto(user);
-        userRepository.delete(userOnSave);
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 
     public boolean changeUser(UserDto user) {

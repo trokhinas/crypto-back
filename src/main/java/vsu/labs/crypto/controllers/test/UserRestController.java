@@ -2,6 +2,7 @@ package vsu.labs.crypto.controllers.test;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import vsu.labs.crypto.dto.response.Response;
 import vsu.labs.crypto.dto.test.UserDto;
 import vsu.labs.crypto.service.test.UserService;
 
@@ -13,17 +14,18 @@ public class UserRestController {
     private final UserService userService;
 
     @PostMapping()
-    public boolean addUser(@RequestBody UserDto userDto) {
-        return userService.addUser(userDto);
+    public Response addUser(@RequestBody UserDto user) {
+        return Response.success(userService.addUser(user));
     }
 
     @PutMapping()
-    public boolean changeUser(@RequestBody UserDto userDto) {
-        return userService.changeUser(userDto);
+    public Response changeUser(@RequestBody UserDto user) {
+        return Response.success(userService.changeUser(user));
     }
 
     @DeleteMapping()
-    public void deleteUser(@RequestBody UserDto userDto) {
-        userService.deleteUser(userDto);
+    public Response deleteUser(@RequestParam Long userId) {
+        userService.deleteUser(userId);
+        return Response.success();
     }
 }

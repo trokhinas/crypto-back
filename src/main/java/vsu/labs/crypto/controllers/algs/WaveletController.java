@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import vsu.labs.crypto.algs.compression.wavelet.Wavelet;
 import vsu.labs.crypto.controllers.algs.abstr.AbstractAlgController;
 import vsu.labs.crypto.dto.response.Response;
+import vsu.labs.crypto.exceptions.LogicException;
 import vsu.labs.crypto.service.algs.Wavelet.WaveletService;
 
 import java.io.BufferedOutputStream;
@@ -31,7 +32,7 @@ public class WaveletController extends AbstractAlgController {
     @PostMapping("upload")
     public Response handleFileUpload(@RequestParam("id") int id,
                                    @RequestParam(required = false) Long eps,
-                                   @RequestParam("file") MultipartFile file) throws IOException {
+                                   @RequestParam("file") MultipartFile file) throws IOException, LogicException {
         if (file != null) {
             File dir = new File(pathToRoot);
             if (!dir.exists()) {

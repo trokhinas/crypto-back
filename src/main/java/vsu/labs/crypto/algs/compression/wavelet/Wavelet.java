@@ -20,7 +20,7 @@ public final class Wavelet {
      * @return коэффициент сжатия изображения, выражающийся в усреднённом среди пикселей каждого цвета
      * отношении ненулевых элементов до и после сжатия
      */
-    public static double haarCompression(String pathToImage, String newImagePath, String pathToEncodedImage, double eps) {
+    public static double haarCompression(String pathToImage, String newImagePath, String pathToEncodedImage, double eps) throws LogicException {
         File imageSrc = new File(pathToImage);
         try {
             BufferedImage bufferedImageSrc = ImageIO.read(imageSrc);

@@ -20,7 +20,7 @@ create table lecture
 			references course,
 	user_id integer
 		constraint course_themes_users_id_fk
-			references users
+			references users ON DELETE CASCADE
 )
 ;
 

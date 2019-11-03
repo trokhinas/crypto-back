@@ -34,7 +34,7 @@ create table mark
 			primary key,
 	user_id integer
 		constraint mark_user_id_fk
-			references "users",
+			references "users" ON DELETE CASCADE,
 	test_id integer
 		constraint mark_test_id_fk
 			references test,

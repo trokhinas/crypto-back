@@ -8,11 +8,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface UserDataExtractors {
-    ObjectDataExtractor<UserEntity> ID_EXTRACTOR = new ObjectDataExtractor<>("id", UserEntity::getId);
-    ObjectDataExtractor<UserEntity> NAME_EXTRACTOR = new ObjectDataExtractor<>("name", UserEntity::getName);
-    ObjectDataExtractor<UserEntity> SURNAME_EXTRACTOR = new ObjectDataExtractor<>("surname", UserEntity::getSurname);
-    ObjectDataExtractor<UserEntity> LOGIN_EXTRACTOR = new ObjectDataExtractor<>("login", UserEntity::getLogin);
-    ObjectDataExtractor<UserEntity> ROLE_EXTRACTOR = new ObjectDataExtractor<>("role", user -> RoleType.byId(user.getRoleId()));
+    ObjectDataExtractor<UserEntity> ID_EXTRACTOR =
+            new ObjectDataExtractor<>("id", UserEntity::getId);
+    ObjectDataExtractor<UserEntity> NAME_EXTRACTOR =
+            new ObjectDataExtractor<>("name", UserEntity::getName);
+    ObjectDataExtractor<UserEntity> SURNAME_EXTRACTOR =
+            new ObjectDataExtractor<>("surname", UserEntity::getSurname);
+    ObjectDataExtractor<UserEntity> LOGIN_EXTRACTOR =
+            new ObjectDataExtractor<>("login", UserEntity::getLogin);
+    ObjectDataExtractor<UserEntity> ROLE_EXTRACTOR =
+            new ObjectDataExtractor<>("role", user -> RoleType.byId(user.getRoleId()).getName());
 
     List<ObjectDataExtractor<UserEntity>> ALL_EXTRACTORS = Arrays.asList(
             ID_EXTRACTOR, NAME_EXTRACTOR, SURNAME_EXTRACTOR, LOGIN_EXTRACTOR, ROLE_EXTRACTOR

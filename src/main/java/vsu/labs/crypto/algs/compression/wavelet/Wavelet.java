@@ -1,5 +1,7 @@
 package vsu.labs.crypto.algs.compression.wavelet;
 
+import vsu.labs.crypto.exceptions.LogicException;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -24,10 +26,10 @@ public final class Wavelet {
             BufferedImage bufferedImageSrc = ImageIO.read(imageSrc);
             int w = bufferedImageSrc.getWidth(), h = bufferedImageSrc.getHeight();
             if (w != h || (w & (w - 1)) != 0)
-                throw new IllegalArgumentException("Image size must be power of 2 and width must be equals height");
+                throw new LogicException("Размер картинки должен быть степенью 2 и картинка должна быть квадратной!");
             String fileType = getFileExtension(newImagePath);
             if (fileType.equals(""))
-                throw new IllegalArgumentException("File extension not specified for compressed image");
+                throw new LogicException("Файл не является изображением!");
             double[][] pixRed = new double[w][h],pixBlue = new double[w][h], pixGreen = new double[w][h];
             for( int i = 0; i < w; i++ )
                 for( int j = 0; j < h; j++ ) {
@@ -36,7 +38,6 @@ public final class Wavelet {
                     pixGreen[i][j] = (pix >> 8) & 0xFF;
                     pixRed[i][j] = (pix >> 16) & 0xFF;
                 }
-
             haarTransformData(pixBlue);
             int blueNonZerosOld = countNonZeros(pixBlue);
             zeroing(pixBlue, eps);

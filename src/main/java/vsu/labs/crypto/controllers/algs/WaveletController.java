@@ -29,7 +29,9 @@ public class WaveletController extends AbstractAlgController {
     private static String extension;
 
     @PostMapping("upload")
-    public String handleFileUpload(@RequestParam("id") int id, @RequestParam int eps, @RequestParam("file") MultipartFile file) throws IOException {
+    public Response handleFileUpload(@RequestParam("id") int id,
+                                   @RequestParam(required = false) Long eps,
+                                   @RequestParam("file") MultipartFile file) throws IOException {
         if (file != null) {
             File dir = new File(pathToRoot);
             if (!dir.exists()) {
@@ -44,12 +46,13 @@ public class WaveletController extends AbstractAlgController {
             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(newFile));
             stream.write(file.getBytes());
             stream.close();
-            Wavelet.haarCompression(pathOriginalFile, pathCompressedFile, pathTransformedFile, eps);
+            Wavelet.haarCompression(pathOriginalFile, pathCompressedFile, pathTransformedFile, eps == null ? 0 : eps);
+            return Response.success();
         }
-        return null;
+        return Response.fail("Файл пуст!");
     }
 
-    @GetMapping("/transformed")
+    @GetMapping("transformed")
     public ResponseEntity<Resource> getTransformed(@RequestParam("id") int id) {
         String path = "transformed" + id + WaveletController.extension;
         Resource file = waveletService.loadAsResource(path);
@@ -57,7 +60,7 @@ public class WaveletController extends AbstractAlgController {
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-    @GetMapping("/compressed")
+    @GetMapping("compressed")
     public ResponseEntity<Resource> getCompressed(@RequestParam("id") int id) {
         String path = "Compressed" + id + WaveletController.extension;
         Resource file = waveletService.loadAsResource(path);

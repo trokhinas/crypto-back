@@ -13,6 +13,7 @@ import vsu.labs.crypto.entity.JpaRepository.UserRepository;
 import vsu.labs.crypto.entity.test.LectureEntity;
 import vsu.labs.crypto.exceptions.algs.encryption.transposition.StorageFileNotFoundException;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -55,9 +56,10 @@ public class LectureService {
         }
     }
 
-    public List<LectureDto> getAll(){
+    public List<LectureDto> getAll() {
         return lectureMapper.toDto(lectureRepository.findAll());
     }
+
     public BlocksResponse getBlocks() {
         return BlocksResponse.withFileCompression(Collections.emptyMap());
     }
@@ -78,6 +80,17 @@ public class LectureService {
         if (foundedLecture == null)
             throw new Exception("Лекции с id:" + id + "не существует");
         return foundedLecture.getReference();
+    }
+
+    public boolean delete(Long id) throws Exception {
+        LectureEntity lectureEntity = lectureRepository.findById(id).get();
+        String pathToFile = lectureEntity.getReference();
+        lectureRepository.delete(lectureEntity);
+        File fileForDelete = new File(pathToFile);
+        if (!fileForDelete.delete()) {
+            throw new Exception("Файл" + fileForDelete + " не удален");
+        }
+        return true;
     }
 
 }

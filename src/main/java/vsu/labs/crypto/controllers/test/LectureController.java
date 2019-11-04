@@ -38,7 +38,7 @@ public class LectureController {
             if (!dir.exists()) {
                 dir.mkdir();
             }
-            String pathOriginalFile = pathToRoot +"/"+ file.getOriginalFilename();
+            String pathOriginalFile = pathToRoot + "/" + file.getOriginalFilename();
             File newFile = new File(pathOriginalFile);
             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(newFile));
             stream.write(file.getBytes());
@@ -59,7 +59,13 @@ public class LectureController {
     }
 
     @GetMapping("all")
-    public Response getAll(){
+    public Response getAll() {
         return Response.success(lectureService.getAll());
     }
+
+    @DeleteMapping
+    public Response delete(@RequestParam Long id) throws Exception {
+        return Response.success(lectureService.delete(id));
+    }
+
 }

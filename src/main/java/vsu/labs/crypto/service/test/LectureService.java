@@ -87,9 +87,7 @@ public class LectureService {
         String pathToFile = lectureEntity.getReference();
         lectureRepository.delete(lectureEntity);
         File fileForDelete = new File(pathToFile);
-        if (!fileForDelete.delete()) {
-            throw new Exception("Файл" + fileForDelete + " не удален");
-        }
+        
         return true;
     }
 

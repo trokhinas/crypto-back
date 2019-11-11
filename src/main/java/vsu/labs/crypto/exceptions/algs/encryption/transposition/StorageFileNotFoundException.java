@@ -1,12 +1,10 @@
 package vsu.labs.crypto.exceptions.algs.encryption.transposition;
 
-public class StorageFileNotFoundException extends RuntimeException {
+import vsu.labs.crypto.exceptions.LogicException;
+
+public class StorageFileNotFoundException extends LogicException {
 
     public StorageFileNotFoundException(String message) {
         super(message);
-    }
-
-    public StorageFileNotFoundException(String message, Throwable cause) {
-        super(message, cause);
     }
 }

@@ -55,10 +55,11 @@ public class ElGamalService {
 
     public PartitionAlgData generateKeyStaging() {
         List<StageData> stagingData = Arrays.asList(
-                StageData.message("Выбирается простое число p длиной 24 бит"),
+                StageData.message("Генерируется случайное простое число p длины 8 бит."),
                 StageData.message("Выбирается число a, являющееся превообразным корнем по модулю p"),
-                StageData.message("Выбирается число x взаимно простое с числом p - 1"),
-                StageData.message("Формируется число y = a^x mod p")
+                StageData.message("Выбирается число x из интервала (1,p) взаимно простое с числом p - 1"),
+                StageData.message("Формируется число y = a^x mod p"),
+                StageData.message("Открытым ключом является тройка (a, p ,y) , закрытым ключом — число x.")
         );
 
         String result = generateKeys();
@@ -66,14 +67,24 @@ public class ElGamalService {
     }
 
     public PartitionAlgData stagingEncrypt(Map<String, ControlPanelBlock> blocks) {
-        return null;
+        String result = encrypt(blocks);
+        List<StageData> stageData = Arrays.asList(
+                StageData.message("Выбирается случайное секретное число k, взаимно простое с p − 1."),
+                StageData.message("Вычисляется γ = a^k(mod p)"),
+                StageData.message("δ = M * y^k(mod p)"),
+                StageData.message("где M — символ исходного сообщения. Пара чисел (γ,δ) является шифртекстом одного символа текста."),
+                StageData.message("Такой процесс проделывается для каждого символа текста")
+        );
+
+        return new PartitionAlgData(stageData, result);
     }
 
     public String encrypt(Map<String, ControlPanelBlock> blocks) {
         DefaultBlocksChecker.checkOnlyRequiredBlocks(blocks, REQUIRED_IDS_ENCRYPT);
-        BigInteger openA = new BigInteger(blocks.get("openA").getValue());
-        BigInteger openP = new BigInteger(blocks.get("openP").getValue());
-        BigInteger openY = new BigInteger(blocks.get("openY").getValue());
+        BigInteger openA = new BigInteger(blocks.get("openA").getValue().trim());
+        BigInteger openP = new BigInteger(blocks.get("openP").getValue().trim());
+        BigInteger openY = new BigInteger(blocks.get("openY").getValue().trim());
+
         String text = blocks.get("text").getValue();
         ElGamal.OpenKey openKey = new ElGamal.OpenKey(openA, openP, openY);
 
@@ -92,32 +103,41 @@ public class ElGamalService {
     }
 
     public PartitionAlgData stagingDecrypt(Map<String, ControlPanelBlock> blocks) {
-        return null;
+        String result = decrypt(blocks);
+        List<StageData> stageData = Arrays.asList(
+                StageData.message("M = γ^-x * δ (mod p)"),
+                StageData.message("где M — символ исходного сообщения. Пара чисел (γ,δ) 2 символа зашифрованного текста."),
+                StageData.message("Такой процесс проделывается для каждого символа текста")
+        );
+
+        return new PartitionAlgData(stageData, result);
     }
 
     public String decrypt(Map<String, ControlPanelBlock> blocks) {
-        DefaultBlocksChecker.checkOnlyRequiredBlocks(blocks, REQUIRED_IDS_ENCRYPT);
-        BigInteger openA = new BigInteger(blocks.get("openA").getValue());
-        BigInteger openP = new BigInteger(blocks.get("openP").getValue());
-        BigInteger openY = new BigInteger(blocks.get("openY").getValue());
-        BigInteger secretX = new BigInteger(blocks.get("secretX").getValue());
+        DefaultBlocksChecker.checkOnlyRequiredBlocks(blocks, REQUIRED_IDS_DECRYPT);
+        BigInteger openA = new BigInteger(blocks.get("openA").getValue().trim());
+        BigInteger openP = new BigInteger(blocks.get("openP").getValue().trim());
+        BigInteger openY = new BigInteger(blocks.get("openY").getValue().trim());
+        BigInteger secretX = new BigInteger(blocks.get("secretX").getValue().trim());
+
         String text = blocks.get("text").getValue();
         ElGamal.OpenKey openKey = new ElGamal.OpenKey(openA, openP, openY);
         ElGamal.SecretKey secretKey = new ElGamal.SecretKey(secretX);
 
         StringBuilder builder = new StringBuilder();
-        List<Pair<String, String>> pairs = new ArrayList<>();
+        List<Pair<Character, Character>> pairs = new ArrayList<>();
         for (int i = 0; i < text.length() / 2; i++) {
-            String c1 = String.valueOf(text.charAt(i));
-            String c2 = String.valueOf(text.charAt(i + 1));
+            int counter = i * 2;
+            char c1 = text.charAt(counter);
+            char c2 = text.charAt(counter + 1);
 
             pairs.add(Pair.of(c1, c2));
         }
         pairs.stream()
                 .map(pair ->
                         Pair.of(
-                                BigInteger.valueOf((long) pair.getFirst().charAt(0)),
-                                BigInteger.valueOf((long) pair.getSecond().charAt(0))
+                                BigInteger.valueOf((long) pair.getFirst()),
+                                BigInteger.valueOf((long) pair.getSecond())
                         )
                 )
                 .forEach(pair -> {

@@ -20,7 +20,7 @@ public class UserService {
 
     public boolean changeOrAddUser(UserDto user) {
         UserEntity userOnSave = userMapper.fromDto(user);
-        boolean exist = userRepository.findById(userOnSave.getId()) == null ? false : true;
+        boolean exist = user.getId() != null;
         if (!exist && user.getPassword()==null)// новый пользователь
             throw new LogicException("При создании нового пользователя поле пароля пустое");
         if (exist && user.getPassword()==null){// обовление пользователя, не обновляя пароль

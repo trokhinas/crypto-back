@@ -52,7 +52,7 @@ public class LectureService {
 
             }
         } catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+            throw new StorageFileNotFoundException("Could not read file: " + filename);
         }
     }
 

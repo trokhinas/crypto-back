@@ -11,7 +11,9 @@ import java.util.function.Supplier;
 public final class GenerationUtils {
     private static final long DEFAULT_TIMEOUT_SECOND = 10;
 
-    public static BigInteger whileWithTimeout(Predicate<BigInteger> condition, Supplier<BigInteger> supplier) {
+    public static BigInteger whileWithTimeout(Predicate<BigInteger> condition,
+                                              Supplier<BigInteger> supplier) {
+
         log.info("process method whileWithTimeout");
         long start = System.currentTimeMillis();
         BigInteger result = supplier.get();

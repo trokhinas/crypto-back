@@ -19,7 +19,7 @@ import static vsu.labs.crypto.utils.math.MathConstants.ONE;
 public final class ElGamal {
     private static final Logger log = LoggerFactory.getLogger(ElGamal.class);
 
-    private static final Integer P_BITS = 16;
+    private static final Integer P_BITS = 8;
 
     public static Pair<OpenKey, SecretKey> generateKeys() {
         log.info("process method generateKeys");

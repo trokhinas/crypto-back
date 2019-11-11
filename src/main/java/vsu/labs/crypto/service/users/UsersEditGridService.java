@@ -43,6 +43,7 @@ public class UsersEditGridService {
 
             row.put(key, value);
         });
+        row.put("roleId", userEntity.getRoleId());
 
         return row;
     }
@@ -50,7 +51,11 @@ public class UsersEditGridService {
     private List<GridColumn> buildColumns() {
         List<GridColumn> columns = new ArrayList<>();
 
-        GridColumn deleteEdit = new GridColumn(GridColumnType.DELETE_EDIT.getType(), "", GridColumnType.DELETE_EDIT);
+        GridColumn deleteEdit = new GridColumn(
+                GridColumnType.DELETE_EDIT.getType(),
+                "",
+                GridColumnType.DELETE_EDIT
+        );
         columns.add(deleteEdit);
 
         UserDataExtractors.ALL_EXTRACTORS.forEach(extractor -> {

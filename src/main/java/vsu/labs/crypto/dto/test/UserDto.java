@@ -1,15 +1,10 @@
 package vsu.labs.crypto.dto.test;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import vsu.labs.crypto.entity.test.CourseEntity;
-import vsu.labs.crypto.entity.test.LectureEntity;
-
-import javax.persistence.Column;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import java.util.List;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto {
     private Long id;
 
@@ -22,5 +17,4 @@ public class UserDto {
     private String password;
 
     private long roleId;
-
 }

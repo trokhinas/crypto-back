@@ -15,13 +15,9 @@ public class UserRestController {
 
     @PostMapping()
     public Response addUser(@RequestBody UserDto user) {
-        return Response.success(userService.addUser(user));
+        return Response.success(userService.changeOrAddUser(user));
     }
 
-    @PutMapping()
-    public Response changeUser(@RequestBody UserDto user) {
-        return Response.success(userService.changeUser(user));
-    }
 
     @DeleteMapping()
     public Response deleteUser(@RequestParam Long userId) {

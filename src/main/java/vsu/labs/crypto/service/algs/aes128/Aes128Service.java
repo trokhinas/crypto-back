@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 import vsu.labs.crypto.algs.common.BlocksResponse;
 import vsu.labs.crypto.algs.common.ControlPanelBlock;
 import vsu.labs.crypto.algs.digSignature.aes128.AES128;
-import vsu.labs.crypto.algs.morse.Morse;
 import vsu.labs.crypto.dto.crypto.PartitionAlgData;
+import vsu.labs.crypto.enums.ResponseBlockEnum;
 import vsu.labs.crypto.service.algs.common.DefaultBlocksChecker;
 import vsu.labs.crypto.utils.algs.BlockBuilder;
 
@@ -15,6 +15,7 @@ import javax.crypto.NoSuchPaddingException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +31,12 @@ public class Aes128Service {
                 .withBlock("sign","подпись")
                 .build();
 
-        return BlocksResponse.withCheckSign(blockMap);
+        return BlocksResponse.empty(blockMap)
+                .withProperty(ResponseBlockEnum.WithCheckSign.getValue());
     }
 
     public String encode(Map<String, ControlPanelBlock> blocks) {
-        checkBlocks(blocks);
+        DefaultBlocksChecker.checkOnlyRequiredBlocks(blocks, Arrays.asList("text", "secretKey"));
         String text = getValueFromBlockWithId("text", blocks);
         String secretKey = getValueFromBlockWithId("secretKey",blocks);
         return AES128.encode(text,secretKey);
@@ -50,7 +52,7 @@ public class Aes128Service {
 
 
     public PartitionAlgData stagingEncode(Map<String, ControlPanelBlock> blocks) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException {
-        checkBlocks(blocks);
+        DefaultBlocksChecker.checkOnlyRequiredBlocks(blocks, Arrays.asList("text", "secretKey"));
         String text = getValueFromBlockWithId("text", blocks);
         String secretKey = getValueFromBlockWithId("secretKey",blocks);
         return AES128.stagingEncrypt(text,secretKey);

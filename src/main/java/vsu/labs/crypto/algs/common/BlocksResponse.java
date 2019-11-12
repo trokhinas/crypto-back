@@ -26,6 +26,10 @@ public class BlocksResponse {
         return this;
     }
 
+    public static BlocksResponse empty(Map<String, ControlPanelBlock> blocks) {
+        return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).map(new HashMap<>()).build();
+    }
+
     public static BlocksResponse withEncrypt(Map<String, ControlPanelBlock> blocks) {
         return BlocksResponse.builder().blocks(blocks).ids(blocks.keySet()).map(new HashMap<>() {{
             put(WithEncrypt.getValue(), true);

@@ -30,7 +30,7 @@ public class WaveletService {
         try {
             String root = System.getProperty("user.dir");
             System.out.println(root);
-            String fullPathToFile = root+"\\src\\main\\resources\\pictures\\"+filename;
+            String fullPathToFile = root+"/src/main/resources/pictures/"+filename;
             System.out.println(fullPathToFile);
             Path file = load(fullPathToFile);
             Resource resource = new UrlResource(file.toUri());

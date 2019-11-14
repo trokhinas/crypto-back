@@ -42,7 +42,7 @@ public class LectureService {
     public Resource loadAsResource(String filename) {
         try {
             String root = System.getProperty("user.dir");
-            String fullPathToFile = root + "\\src\\main\\resources\\lecture\\" + filename;
+            String fullPathToFile = root + "/src/main/resources/lecture/" + filename;
             Path file = load(fullPathToFile);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {

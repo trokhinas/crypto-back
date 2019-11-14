@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -100,6 +101,6 @@ public class AES128 {
         List<StageData> allStages = stagesDecrypt.stream()
                 .map(StageData::message)
                 .collect(Collectors.toList());
-        return new PartitionAlgData(allStages, checkedSign.equals(message) ? "Проверка подписи пройдена" : "Проверка подписи провалена");
+        return new PartitionAlgData(allStages, Objects.equals(checkedSign, message) ? "Проверка подписи пройдена" : "Проверка подписи провалена");
     }
 }
